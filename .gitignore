@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+venv/
+.envrc
+*.egg-info/
+.eggs/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.iml
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Docker volumes (si els mapejes localment)
+data/
+filestore/
+sessions/
+
+# Tests / coverage
+.coverage
+htmlcov/
+pytest_cache/
