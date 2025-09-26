@@ -16,13 +16,67 @@
 -->
 
     <!-- actions opening views on models -->
-<!--
-    <record model="ir.actions.act_window" id="natacion.action_window">
-      <field name="name">natacion window</field>
-      <field name="res_model">natacion.natacion</field>
+
+    <record model="ir.actions.act_window" id="natacion.action_club_window">
+      <field name="name">natacion Club window</field>
+      <field name="res_model">natacion.club</field>
       <field name="view_mode">list,form</field>
     </record>
--->
+
+    <record model="ir.actions.act_window" id="natacion.action_category_window">
+      <field name="name">natacion Category window</field>
+      <field name="res_model">natacion.category</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="natacion.action_swimmer_window">
+      <field name="name">natacion Swimmer window</field>
+      <field name="res_model">natacion.swimmer</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="natacion.action_besttime_window">
+      <field name="name">natacion Besttime window</field>
+      <field name="res_model">natacion.besttime</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="natacion.action_style_window">
+      <field name="name">natacion Style window</field>
+      <field name="res_model">natacion.style</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="natacion.action_championship_window">
+      <field name="name">natacion Championship window</field>
+      <field name="res_model">natacion.championship</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="natacion.action_session_window">
+      <field name="name">natacion Session window</field>
+      <field name="res_model">natacion.session</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="natacion.action_event_window">
+      <field name="name">natacion Event window</field>
+      <field name="res_model">natacion.event</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="natacion.action_series_window">
+      <field name="name">natacion Series window</field>
+      <field name="res_model">natacion.series</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="natacion.action_result_window">
+      <field name="name">natacion Result window</field>
+      <field name="res_model">natacion.result</field>
+      <field name="view_mode">list,form</field>
+    </record>
 
     <!-- server action to the one above -->
 <!--
@@ -41,20 +95,45 @@
 -->
 
     <!-- Top menu item -->
-<!--
+
     <menuitem name="natacion" id="natacion.menu_root"/>
--->
+
     <!-- menu categories -->
-<!--
+
     <menuitem name="Menu 1" id="natacion.menu_1" parent="natacion.menu_root"/>
-    <menuitem name="Menu 2" id="natacion.menu_2" parent="natacion.menu_root"/>
--->
+
+
     <!-- actions -->
-<!--
-    <menuitem name="List" id="natacion.menu_1_list" parent="natacion.menu_1"
-              action="natacion.action_window"/>
-    <menuitem name="Server to list" id="natacion" parent="natacion.menu_2"
-              action="natacion.action_server"/>
--->
+
+    <menuitem name="club" id="natacion.menu_club" parent="natacion.menu_1"
+              action="natacion.action_club_window"/>
+
+    <menuitem name="category" id="natacion.menu_category" parent="natacion.menu_1"
+              action="natacion.action_category_window"/>
+
+    <menuitem name="swimmer" id="natacion.swimmer" parent="natacion.menu_1"
+              action="natacion.action_swimmer_window"/>
+
+    <menuitem name="besttime" id="natacion.besttime" parent="natacion.menu_1"
+              action="natacion.action_besttime_window"/>
+
+    <menuitem name="style" id="natacion.menu_style" parent="natacion.menu_1"
+              action="natacion.action_style_window"/>
+
+    <menuitem name="championship" id="natacion.menu_championship" parent="natacion.menu_1"
+              action="natacion.action_championship_window"/>
+
+    <menuitem name="session" id="natacion.menu_session" parent="natacion.menu_1"
+              action="natacion.action_session_window"/>
+
+    <menuitem name="event" id="natacion.menu_event" parent="natacion.menu_1"
+              action="natacion.action_event_window"/>
+
+    <menuitem name="series" id="natacion.menu_series" parent="natacion.menu_1"
+              action="natacion.action_series_window"/>
+
+    <menuitem name="result" id="natacion.menu_result" parent="natacion.menu_1"
+              action="natacion.action_result_window"/>
+
   </data>
 </odoo>

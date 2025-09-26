@@ -1,2 +1,12 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_natacion_natacion,natacion.natacion,model_natacion_natacion,base.group_user,1,1,1,1
+
+access_natacion_club,natacion.club,model_natacion_club,base.group_user,1,1,1,1
+access_natacion_category,natacion.category,model_natacion_category,base.group_user,1,1,1,1
+access_natacion_swimmer,natacion.swimmer,model_natacion_swimmer,base.group_user,1,1,1,1
+access_natacion_besttime,natacion.besttime,model_natacion_besttime,base.group_user,1,1,1,1
+access_natacion_style,natacion.style,model_natacion_style,base.group_user,1,1,1,1
+access_natacion_championship,natacion.championship,model_natacion_championship,base.group_user,1,1,1,1
+access_natacion_session,natacion.session,model_natacion_session,base.group_user,1,1,1,1
+access_natacion_event,natacion.event,model_natacion_event,base.group_user,1,1,1,1
+access_natacion_series,natacion.series,model_natacion_series,base.group_user,1,1,1,1
+access_natacion_result,natacion.result,model_natacion_result,base.group_user,1,1,1,1
