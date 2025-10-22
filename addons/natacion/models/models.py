@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields
+from odoo import models, fields, api
+
 
 class club(models.Model):
     _name = 'natacion.club'
@@ -25,10 +27,16 @@ class swimmer(models.Model):
 
     name = fields.Char()
     year_birth = fields.Integer()
-    age = fields.Integer()
+    age = fields.Integer(compute="_get_age")
     category_id = fields.Many2one('natacion.category')
     club_id = fields.Many2one('natacion.club')
     best_time_ids = fields.One2many('natacion.besttime', 'swimmer_id')
+    image = fields.Image()
+
+    @api.depends("year_birth")
+    def _get_age(self):
+        for s in self:
+            s.age = int(fields.Date.to_string(fields.Date.today()).split('-')[0]) - s.year_birth
 
 
 class besttime(models.Model):

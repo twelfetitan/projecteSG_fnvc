@@ -1,0 +1,105 @@
+<odoo>
+    <data>
+
+        <record id="natacion.club_club1" model="natacion.club">
+            <field name="name">TORNADO SWIM CLUB</field>
+            <field name="town">Barcelona</field>
+        </record>
+
+        <record id="natacion.club_club2" model="natacion.club">
+            <field name="name">OLIMPIC WAVES</field>
+            <field name="town">Madrid</field>
+        </record>
+
+        <record id="natacion.club_club3" model="natacion.club">
+            <field name="name">NEPTUNO TEAM</field>
+            <field name="town">Valencia</field>
+        </record>
+
+        <record id="natacion.club_club4" model="natacion.club">
+            <field name="name">TORPEDO AQUA</field>
+            <field name="town">Sevilla</field>
+        </record>
+
+        <record id="natacion.club_club5" model="natacion.club">
+            <field name="name">TRITON SWIMMERS</field>
+            <field name="town">Bilbao</field>
+        </record>
+
+        <record id="natacion.club_club6" model="natacion.club">
+            <field name="name">AQUA FORCE</field>
+            <field name="town">Zaragoza</field>
+        </record>
+
+        <record id="natacion.club_club7" model="natacion.club">
+            <field name="name">RAPID STREAM</field>
+            <field name="town">Málaga</field>
+        </record>
+
+        <record id="natacion.club_club8" model="natacion.club">
+            <field name="name">BLUE CURRENT</field>
+            <field name="town">Granada</field>
+        </record>
+
+        <record id="natacion.club_club9" model="natacion.club">
+            <field name="name">SPLASH TEAM</field>
+            <field name="town">Vigo</field>
+        </record>
+
+        <record id="natacion.club_club10" model="natacion.club">
+            <field name="name">MARLIN SWIMMERS</field>
+            <field name="town">Santander</field>
+        </record>
+
+        <record id="natacion.club_club11" model="natacion.club">
+            <field name="name">AQUA STARS</field>
+            <field name="town">Alicante</field>
+        </record>
+
+        <record id="natacion.club_club12" model="natacion.club">
+            <field name="name">WAVE RIDERS</field>
+            <field name="town">Córdoba</field>
+        </record>
+
+        <record id="natacion.club_club13" model="natacion.club">
+            <field name="name">SEA HAWKS</field>
+            <field name="town">Oviedo</field>
+        </record>
+
+        <record id="natacion.club_club14" model="natacion.club">
+            <field name="name">OCEAN FURY</field>
+            <field name="town">Pamplona</field>
+        </record>
+
+        <record id="natacion.club_club15" model="natacion.club">
+            <field name="name">DOLPHIN SWIMMERS</field>
+            <field name="town">Salamanca</field>
+        </record>
+
+        <record id="natacion.club_club16" model="natacion.club">
+            <field name="name">AQUATIC TITANS</field>
+            <field name="town">Burgos</field>
+        </record>
+
+        <record id="natacion.club_club17" model="natacion.club">
+            <field name="name">RIVER SHARKS</field>
+            <field name="town">Toledo</field>
+        </record>
+
+        <record id="natacion.club_club18" model="natacion.club">
+            <field name="name">WATER WARRIORS</field>
+            <field name="town">León</field>
+        </record>
+
+        <record id="natacion.club_club19" model="natacion.club">
+            <field name="name">AQUA PHANTOMS</field>
+            <field name="town">Murcia</field>
+        </record>
+
+        <record id="natacion.club_club20" model="natacion.club">
+            <field name="name">SURGE SWIMMERS</field>
+            <field name="town">Valladolid</field>
+        </record>
+
+    </data>
+</odoo>

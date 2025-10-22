@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.club_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.club</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                    <field name="town" />
+                    <field name="member_ids" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.club_form_view">
+            <field name="name">natacion.club.form</field>
+            <field name="model">natacion.club</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Club Data">
+                            <field name="name" />
+                            <field name="town" />
+                            <field name="member_ids"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

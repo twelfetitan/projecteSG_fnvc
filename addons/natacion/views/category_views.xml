@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.category_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.category</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.category_form_view">
+            <field name="name">natacion.category.form</field>
+            <field name="model">natacion.category</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Category Data">
+                            <field name="name" />
+                            <field name="minimum_age" />
+                            <field name="maximum_age"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

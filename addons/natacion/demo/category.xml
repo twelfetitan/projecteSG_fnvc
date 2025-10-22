@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+
+        <record id="natacion.category_1" model="natacion.category">
+            <field name="name">JOVEN_ADULTO</field>
+            <field name="minimum_age">18</field>
+            <field name="maximum_age">25</field>
+        </record>
+
+        <record id="natacion.category_2" model="natacion.category">
+            <field name="name">ADULTO</field>
+            <field name="minimum_age">26</field>
+            <field name="maximum_age">35</field>
+        </record>
+
+        <record id="natacion.category_3" model="natacion.category">
+            <field name="name">ADULTO_MADURO</field>
+            <field name="minimum_age">36</field>
+            <field name="maximum_age">45</field>
+        </record>
+
+        <record id="natacion.category_4" model="natacion.category">
+            <field name="name">VETERANO</field>
+            <field name="minimum_age">46</field>
+            <field name="maximum_age">55</field>
+        </record>
+
+        <record id="natacion.category_5" model="natacion.category">
+            <field name="name">SENIOR</field>
+            <field name="minimum_age">56</field>
+            <field name="maximum_age">65</field>
+        </record>
+
+    </data>
+</odoo>

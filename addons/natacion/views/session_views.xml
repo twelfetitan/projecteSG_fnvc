@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.session_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.session</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                    <field name="date" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.session_form_view">
+            <field name="name">natacion.session.form</field>
+            <field name="model">natacion.session</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Session Data">
+                            <field name="name" />
+                            <field name="date" />
+                            <field name="championship_id"/>
+                            <field name="event_ids"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
