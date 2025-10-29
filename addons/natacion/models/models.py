@@ -33,6 +33,7 @@ class swimmer(models.Model):
     club_id = fields.Many2one('natacion.club')
     best_time_ids = fields.One2many('natacion.besttime', 'swimmer_id')
     image = fields.Image()
+    is_swimmer = fields.Boolean(default=True)
 
     @api.depends("year_birth")
     def _get_age(self):
