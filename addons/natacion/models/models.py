@@ -22,10 +22,11 @@ class category(models.Model):
 
 
 class swimmer(models.Model):
-    _name = 'natacion.swimmer'
-    _description = 'nadador'
-
-    name = fields.Char()
+    #_name = 'natacion.swimmer'
+    #_description = 'nadador'
+    _inherit = 'res.partner';
+    
+    #name = fields.Char()
     year_birth = fields.Integer()
     age = fields.Integer(compute="_get_age")
     category_id = fields.Many2one('natacion.category')
