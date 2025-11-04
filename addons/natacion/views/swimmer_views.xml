@@ -1,33 +1,49 @@
 <odoo>
     <data>
+
+        <!-- List View for Swimmers -->
         <record model="ir.ui.view" id="natacion.swimmer_list">
             <field name="name">natacion list</field>
-            <field name="model">natacion.swimmer</field>
+            <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name" />
-                    <field name="category_id" />
+                    <field name="name"/>
+                    <field name="category_id"/>
                 </list>
             </field>
         </record>
 
+        <!-- Form View for Swimmers -->
         <record model="ir.ui.view" id="natacion.swimmer_form_view">
             <field name="name">natacion.swimmer.form</field>
-            <field name="model">natacion.swimmer</field>
+            <field name="model">res.partner</field>
             <field name="arch" type="xml">
-                <form>
+                <form string="Nadador">
                     <sheet>
-                        <group string="Swimmer Data">
-                            <field name="name" />
-                            <field name="year_birth" />
-                            <field name="age" />
-                            <field name="category_id" />
-                            <field name="club_id" />
-                            <field name="best_time_ids" />
+                        <group string="Datos del Nadador">
+                            <group>
+                                <field name="name"/>
+                                <field name="year_birth"/>
+                                <field name="age" readonly="1"/>
+                                <field name="category_id"/>
+                                <field name="club_id"/>
+                                <field name="is_swimmer"/>
+                            </group>
+                            <group>
+                                <field name="image" widget="image" class="oe_avatar"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
+
+        <!-- Action to open Swimmer views -->
+        <record model="ir.actions.act_window" id="natacion.action_swimmer_window">
+            <field name="name">Swimmer</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
     </data>
 </odoo>
