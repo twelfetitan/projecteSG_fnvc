@@ -21,11 +21,49 @@
                         <group string="Club Data">
                             <field name="name" />
                             <field name="town" />
-                            <field name="member_ids"/>
+                            <field name="member_ids" />
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
+
+        <!-- Kanban View -->
+        <record model="ir.ui.view" id="natacion.club_kanban_view">
+            <field name="name">natacion.club.form</field>
+            <field name="model">natacion.club</field>
+            <field name="arch" type="xml">
+            <kanban class="o_kanban_example">
+                <field name="name" />
+                <field name="town" />
+                <field name="member_ids" />
+
+                <templates>
+                   <t t-name="kanban-box">
+                    <div class="oe_kanban_card oe_kanban_global_click">
+                        <strong><t t-esc="record.name.value"/></strong>
+                        <div>
+                            <span><b>Població:</b> <t t-esc="record.town.value"/></span><br/>
+                            <span><b>Membres:</b> <t t-esc="record.member_ids.count"/></span>
+                        </div>
+                    </div>
+                </t>
+                </templates>
+            </kanban>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="natacion.action_club_window">
+            <field name="name">natacion.club.form</field>
+            <field name="res_model">natacion.club</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="view_id" ref="natacion.club_list" />
+            <field name="view_ids"
+                eval="[(5, 0, 0), 
+                                  (0, 0, {'view_mode': 'kanban', 'view_id': ref('natacion.club_kanban_view')}),
+                                  (0, 0, {'view_mode': 'list', 'view_id': ref('natacion.club_list')}),
+                                  (0, 0, {'view_mode': 'form', 'view_id': ref('natacion.club_form_view')})]" />
+        </record>
+
     </data>
 </odoo>
