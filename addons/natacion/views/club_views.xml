@@ -8,6 +8,7 @@
                     <field name="name" />
                     <field name="town" />
                     <field name="member_ids" />
+                    <field name="image" />
                 </list>
             </field>
         </record>
@@ -16,40 +17,76 @@
             <field name="name">natacion.club.form</field>
             <field name="model">natacion.club</field>
             <field name="arch" type="xml">
-                <form>
+                <form string="Club de Natación">
                     <sheet>
-                        <group string="Club Data">
-                            <field name="name" />
-                            <field name="town" />
-                            <field name="member_ids" />
+                        
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Información del Club">
+                                <field name="town" />
+                            </group>
+
+                            <group class="oe_right" style="text-align:center; margin-top:10px;">
+                                <field name="image" widget="image" class="oe_avatar"
+                                    options="{'preview_image': 'image', 'size': [128, 128]}"
+                                    nolabel="1" />
+                            </group>
+                        </group>
+
+                        <group colspan="2">
+                            <field name="member_ids" nolabel="1" colspan="2"
+                                options="{'no_create_edit': False}"
+                                height="350"
+                                width="100%" />
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
 
+
         <!-- Kanban View -->
         <record model="ir.ui.view" id="natacion.club_kanban_view">
             <field name="name">natacion.club.form</field>
             <field name="model">natacion.club</field>
             <field name="arch" type="xml">
-            <kanban class="o_kanban_example">
-                <field name="name" />
-                <field name="town" />
-                <field name="member_ids" />
+                <kanban class="o_kanban_example">
+                    <field name="name" />
+                    <field name="town" />
+                    <field name="image" />
+                    <field name="member_ids" />
 
-                <templates>
-                   <t t-name="kanban-box">
-                    <div class="oe_kanban_card oe_kanban_global_click">
-                        <strong><t t-esc="record.name.value"/></strong>
-                        <div>
-                            <span><b>Població:</b> <t t-esc="record.town.value"/></span><br/>
-                            <span><b>Membres:</b> <t t-esc="record.member_ids.count"/></span>
-                        </div>
-                    </div>
-                </t>
-                </templates>
-            </kanban>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click"
+                                style="padding:10px; border-radius:10px; text-align:center;">
+
+                                <div style="margin-bottom:8px;">
+                                    <img
+                                        t-att-src="kanban_image('natacion.club', 'image', record.id.value)"
+                                        style="width:96px; height:96px; border-radius:50%; object-fit:cover; box-shadow:0 0 5px rgba(0,0,0,0.1);" />
+                                </div>
+
+                                <strong>
+                                    <t t-esc="record.name.value" />
+                                </strong>
+                                <div>
+                                    <span>
+                                        <b>Població:</b>
+                                        <t t-esc="record.town.value" />
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 

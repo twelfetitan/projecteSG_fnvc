@@ -8,6 +8,7 @@ class Club(models.Model):
     name = fields.Char()
     town = fields.Char()
     member_ids = fields.One2many('res.partner', 'club_id')
+    image = fields.Image()
 
 
 class Category(models.Model):
