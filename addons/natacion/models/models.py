@@ -28,7 +28,7 @@ class Swimmer(models.Model):
     is_swimmer = fields.Boolean()
     year_birth = fields.Integer()
     age = fields.Integer(compute="_get_age")
-    category_id = fields.Many2one('natacion.category')
+    category = fields.Many2one('natacion.category')
     club_id = fields.Many2one('natacion.club')
     best_time_ids = fields.One2many('natacion.besttime', 'swimmer_id')
     image = fields.Image()

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <list>
                     <field name="name" />
-                    <field name="category_id" />
+                    <field name="category" />
                 </list>
             </field>
         </record>
@@ -25,7 +25,7 @@
                                 <field name="name" />
                                 <field name="year_birth" />
                                 <field name="age" readonly="1" />
-                                <field name="category_id" />
+                                <field name="category" />
                                 <field name="club_id" />
                                 <field name="is_swimmer" />
                             </group>
@@ -59,7 +59,7 @@
                 <kanban class="o_kanban_example">
                     <field name="name" />
                     <field name="image" />
-                    <field name="category_id" />
+                    <field name="category" />
                     <field name="club_id" />
                     <templates>
                         <t t-name="kanban-box">
@@ -76,7 +76,7 @@
                                     <div>
                                         <span>
                                             <b>Categoría:</b>
-                                            <t t-esc="record.category_id.value" />
+                                            <t t-esc="record.category.value" />
                                         </span>
                                         <br />
                                         <span>
