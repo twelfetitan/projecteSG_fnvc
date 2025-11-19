@@ -22,16 +22,22 @@
                     <sheet>
                         <group string="Datos del Nadador">
                             <group>
+                                <field name="image" widget="image" class="oe_avatar" />
                                 <field name="name" />
                                 <field name="year_birth" />
                                 <field name="age" readonly="1" />
                                 <field name="category" />
                                 <field name="club_id" />
                                 <field name="is_swimmer" />
+                                
+
                             </group>
+                            
                             <group>
-                                <field name="image" widget="image" class="oe_avatar" />
+                                <button string="Ver Formulario Original" type="object" name="action_open_res_partner_view" class="btn-primary"/>
+                                <button string="Boton" type="buton" name="buton"/>
                             </group>
+                            
                         </group>
                     </sheet>
                 </form>

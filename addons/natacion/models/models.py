@@ -38,6 +38,17 @@ class Swimmer(models.Model):
         for s in self:
             s.age = int(fields.Date.to_string(fields.Date.today()).split('-')[0]) - s.year_birth
 
+    def action_open_res_partner_view(self):
+         return { 
+             'name': 'Swimmer', 
+             'view_type': 'form', 
+             'view_mode': 'form', 
+             'res_model': 'res.partner',
+             'res_id': self.id,
+             'type': 'ir.actions.act_window',
+             'target' : 'current'
+         }
+
 
 class BestTime(models.Model):
     _name = 'natacion.besttime'
