@@ -35,7 +35,7 @@
                             
                             <group>
                                 <button string="Ver Formulario Original" type="object" name="action_open_res_partner_view" class="btn-primary"/>
-                                <button string="Boton" type="buton" name="buton"/>
+                                <button string="Pagar Cuota" type="object" name="pay_quota" class="btn-primary"/>
                             </group>
                             
                         </group>

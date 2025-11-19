@@ -1,0 +1,8 @@
+<odoo>
+    <data>
+        <record id= "product_cuota_anual" model= "product.product">
+            <field name="name">Cuota anual</field>
+            <field name="type">service</field>
+        </record>
+    </data>
+</odoo>

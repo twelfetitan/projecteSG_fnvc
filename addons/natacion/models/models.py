@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import UserError
+
 
 class Club(models.Model):
     _name = 'natacion.club'
@@ -32,6 +34,8 @@ class Swimmer(models.Model):
     club_id = fields.Many2one('natacion.club')
     best_time_ids = fields.One2many('natacion.besttime', 'swimmer_id')
     image = fields.Image()
+    
+
 
     @api.depends("year_birth")
     def _get_age(self):
@@ -48,7 +52,22 @@ class Swimmer(models.Model):
              'type': 'ir.actions.act_window',
              'target' : 'current'
          }
+    
+    def pay_quota(self):
+        product = self.env.ref("natacion.product_cuota_anual")
 
+        order = self.env["sale.order"].create({
+        "partner_id": self.id
+        })
+
+        self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": product.id,
+     })
+
+        return order.get_formview_action()
+
+            
 
 class BestTime(models.Model):
     _name = 'natacion.besttime'
