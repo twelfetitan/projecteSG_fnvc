@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from datetime import date, timedelta
 from odoo.exceptions import UserError
+
 
 
 class Club(models.Model):
@@ -12,6 +14,46 @@ class Club(models.Model):
     member_ids = fields.One2many('res.partner', 'club_id')
     image = fields.Image()
 
+    ranking = fields.Integer(string="Ranking", compute='_compute_ranking', store=False)
+    ranking_icon = fields.Char(compute='_compute_ranking_icon', store=False)
+    ranking_color = fields.Char(compute='_compute_ranking_color', store=False)
+    ranking_ribbon = fields.Html(string="Ribbon", compute='_compute_ranking_ribbon', store=False)
+
+    @api.depends('member_ids')
+    def _compute_ranking(self):
+        clubs = self.search([])
+        clubs_sorted = sorted(clubs, key=lambda c: len(c.member_ids), reverse=True)
+        for idx, c in enumerate(clubs_sorted, start=1):
+            c.ranking = idx
+
+    @api.depends('ranking')
+    def _compute_ranking_icon(self):
+        for c in self:
+            if c.ranking == 1:
+                c.ranking_icon = "🥇"
+            elif c.ranking == 2:
+                c.ranking_icon = "🥈"
+            elif c.ranking == 3:
+                c.ranking_icon = "🥉"
+            else:
+                c.ranking_icon = ""
+
+    @api.depends('ranking')
+    def _compute_ranking_color(self):
+        for c in self:
+            if c.ranking == 1:
+                c.ranking_color = "#FFD700"
+            elif c.ranking == 2:
+                c.ranking_color = "#C0C0C0"
+            elif c.ranking == 3:
+                c.ranking_color = "#CD7F32"
+            else:
+                c.ranking_color = "#FFFFFF"
+
+    @api.depends('ranking_color')
+    def _compute_ranking_ribbon(self):
+        for c in self:
+            c.ranking_ribbon = f'<div style="width:100%; height:8px; background-color:{c.ranking_color};"></div>'
 
 class Category(models.Model):
     _name = 'natacion.category'
@@ -33,6 +75,15 @@ class Swimmer(models.Model):
     category = fields.Many2one('natacion.category')
     club_id = fields.Many2one('natacion.club')
     best_time_ids = fields.One2many('natacion.besttime', 'swimmer_id')
+    end_quota = fields.Date(readonly=True)
+    quota_progress = fields.Float(compute="_compute_quota_progress", store=False)
+    quota_valid = fields.Boolean(compute='_compute_quota_valid', store=False)
+    event_ids = fields.Many2many('natacion.event', 'natacion_event_swimmer_rel', 
+                                 'swimmer_id', 'event_id', 
+                                 string="Eventos", readonly=True)
+    event_count = fields.Integer(string="Número de Eventos",  compute="_compute_event_count", store=False)
+    has_events = fields.Boolean(compute='_compute_has_events', store=False)
+    
     image = fields.Image()
     
 
@@ -56,8 +107,14 @@ class Swimmer(models.Model):
     def pay_quota(self):
         product = self.env.ref("natacion.product_cuota_anual")
 
+        startDate = fields.Date.today()
+
+        endDt = fields.Date.from_string(startDate)
+        endDt = endDt.replace(year=endDt.year + 1)
+
         order = self.env["sale.order"].create({
-        "partner_id": self.id
+        "partner_id": self.id,
+        "validity_date": endDt,
         })
 
         self.env["sale.order.line"].create({
@@ -65,7 +122,51 @@ class Swimmer(models.Model):
             "product_id": product.id,
      })
 
+        
+        self.end_quota = endDt
         return order.get_formview_action()
+    
+    @api.depends("end_quota")
+    def _compute_quota_progress(self):
+        from datetime import date
+        for s in self:
+            if not s.end_quota:
+                s.quota_progress = 0
+                continue
+
+            today = date.today()
+            end = s.end_quota
+
+            if today >= end:
+                s.quota_progress = 0
+                continue
+
+            start = end.replace(year=end.year - 1)
+
+            if today < start:
+                s.quota_progress = 100
+                continue
+
+            total_days = (end - start).days
+            remaining_days = (end - today).days
+
+            s.quota_progress = (remaining_days / total_days) * 100
+
+    @api.depends('end_quota')
+    def _compute_quota_valid(self):
+        today = date.today()
+        for s in self:
+            s.quota_valid = bool(s.end_quota and s.end_quota >= today)
+    
+    @api.depends('event_ids')
+    def _compute_event_count(self):
+        for s in self:
+            s.event_count = len(s.event_ids)
+
+    @api.depends('event_ids')
+    def _compute_has_events(self):
+        for s in self:
+            s.has_events = bool(s.event_ids)
 
             
 
@@ -138,6 +239,13 @@ class Event(models.Model):
         'swimmer_id'
     )
     series_ids = fields.One2many('natacion.series', 'event_id')
+
+    @api.constrains('swimmer_ids')
+    def _check_quota_validity(self):
+        for event in self:
+            for swimmer in event.swimmer_ids:
+                if not getattr(swimmer, 'quota_valid', False):
+                    raise UserError(f"El nadador {swimmer.name} no tiene una cuota válida y no puede participar.")
 
 
 class Series(models.Model):
