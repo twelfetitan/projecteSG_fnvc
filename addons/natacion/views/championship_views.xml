@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.championship_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.championship</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                    <field name="club_ids" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.championship_form_view">
+            <field name="name">natacion.championship.form</field>
+            <field name="model">natacion.championship</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Championship Data">
+                            <field name="name" />
+                            <field name="club_ids" />
+                            <field name="swimmer_ids"/>
+                            <field name="session_ids"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

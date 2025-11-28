@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.style_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.style</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.style_form_view">
+            <field name="name">natacion.style.form</field>
+            <field name="model">natacion.style</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="style Data">
+                            <field name="name" />
+                            <field name="best_swimmer_ids" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

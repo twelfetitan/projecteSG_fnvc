@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.besttime_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.besttime</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="style_id" />
+                    <field name="time" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.besttime_form_view">
+            <field name="name">natacion.besttime.form</field>
+            <field name="model">natacion.besttime</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Besttime Data">
+                            <field name="swimmer_id" />
+                            <field name="style_id" />
+                            <field name="time"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

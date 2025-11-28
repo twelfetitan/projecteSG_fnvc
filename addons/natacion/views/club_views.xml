@@ -1,0 +1,104 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.club_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.club</field>
+            <field name="arch" type="xml">
+                <list string="Club">
+                    <field name="ranking_icon" string="Medalla" />
+                    <field name="name" />
+                    <field name="town" />
+                    <field name="member_ids" />
+                </list>
+
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.club_form_view">
+            <field name="name">natacion.club.form</field>
+            <field name="model">natacion.club</field>
+            <field name="arch" type="xml">
+                <form string="Club de Natación">
+                    <field name="ranking_ribbon" widget="html" readonly="1"/>
+                    <sheet>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Información del Club">
+                                <field name="town" />
+                            </group>
+
+                            <group class="oe_right" style="text-align:center; margin-top:10px;">
+                                <field name="image" widget="image" class="oe_avatar"
+                                    options="{'preview_image': 'image', 'size': [128, 128]}"
+                                    nolabel="1" />
+                            </group>
+                        </group>
+
+                        <group colspan="2">
+                            <field name="member_ids" nolabel="1" colspan="2"
+                                options="{'no_create_edit': False}"
+                                height="350"
+                                width="100%" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Kanban View -->
+        <record model="ir.ui.view" id="natacion.club_kanban_view">
+            <field name="name">natacion.club.form</field>
+            <field name="model">natacion.club</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_example">
+    <field name="name"/>
+    <field name="town"/>
+    <field name="image"/>
+    <field name="member_ids"/>
+    <field name="ranking_color"/>
+    <field name="ranking_icon"/>
+
+    <templates>
+        <t t-name="kanban-box">
+            <div class="oe_kanban_card oe_kanban_global_click"
+                 t-att-style="'padding:10px; border-radius:10px; text-align:center; background-color:' + record.ranking_color.value">
+                 
+                <div style="margin-bottom:8px;">
+                    <img t-att-src="kanban_image('natacion.club','image',record.id.value)"
+                         style="width:96px; height:96px; border-radius:50%; object-fit:cover; box-shadow:0 0 5px rgba(0,0,0,0.1);"/>
+                </div>
+
+                <strong><t t-esc="record.name.value"/></strong>
+                <div>
+                    <span><b>Població:</b> <t t-esc="record.town.value"/></span>
+                    <span> <t t-esc="record.ranking_icon.value"/> </span>
+                </div>
+            </div>
+        </t>
+    </templates>
+</kanban>
+
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="natacion.action_club_window">
+            <field name="name">natacion.club.form</field>
+            <field name="res_model">natacion.club</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="view_id" ref="natacion.club_list" />
+            <field name="view_ids"
+                eval="[(5, 0, 0), 
+                                  (0, 0, {'view_mode': 'kanban', 'view_id': ref('natacion.club_kanban_view')}),
+                                  (0, 0, {'view_mode': 'list', 'view_id': ref('natacion.club_list')}),
+                                  (0, 0, {'view_mode': 'form', 'view_id': ref('natacion.club_form_view')})]" />
+        </record>
+
+    </data>
+</odoo>

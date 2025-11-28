@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="natacion.series_list">
+            <field name="name">natacion list</field>
+            <field name="model">natacion.series</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="natacion.series_form_view">
+            <field name="name">natacion.series.form</field>
+            <field name="model">natacion.series</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Series Data">
+                            <field name="name" />
+                            <field name="event_id" />
+                            <field name="result_ids"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
