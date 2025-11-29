@@ -12,7 +12,7 @@ class Club(models.Model):
     name = fields.Char()
     town = fields.Char()
     member_ids = fields.One2many('res.partner', 'club_id')
-    points = fields.Integer(string='Points', default=0)
+    points = fields.Integer(string='Points', default=0, readonly=True)
     image = fields.Image()
 
     # Campos computados, solo en memoria
@@ -98,26 +98,19 @@ class Result(models.Model):
         return record
 
     def write(self, vals):
+    # Guardar los ranks anteriores ANTES de escribir
+        old_ranks = {rec.id: rec.rank for rec in self}
+
         res = super().write(vals)
 
-        # Recalcular ranks y puntos por serie
-        for series in self.mapped('series_id'):
-            # Obtener resultados ordenados por rank en memoria
-            results = series.result_ids.sorted(key=lambda r: r.rank or 999)
+    # Si no se está modificando el rank, no haces nada
+        if "rank" not in vals:
+            return res
 
-            used_ranks = set()
-            for r in results:
-                if r.rank in used_ranks or r.rank is None:
-                    # Asignar el siguiente rank disponible
-                    next_rank = 1
-                    while next_rank in used_ranks:
-                        next_rank += 1
-                    old_rank = r.rank
-                    r.rank = next_rank
-                    r._update_club_points(old_rank, next_rank)
-                    used_ranks.add(next_rank)
-                else:
-                    used_ranks.add(r.rank)
+        for rec in self:
+            old_rank = old_ranks.get(rec.id)
+            new_rank = rec.rank
+            rec._update_club_points(old_rank, new_rank)
 
         return res
     
@@ -302,12 +295,8 @@ class Event(models.Model):
     style_id = fields.Many2one('natacion.style')
     category_id = fields.Many2one('natacion.category')
     session_id = fields.Many2one('natacion.session')
-    swimmer_ids = fields.Many2many(
-        'res.partner',
-        'natacion_event_swimmer_rel',
-        'event_id',
-        'swimmer_id'
-    )
+    swimmer_ids = fields.Many2many('res.partner', string="Swimmers")
+
     series_ids = fields.One2many('natacion.series', 'event_id')
 
     @api.constrains('swimmer_ids')
@@ -341,6 +330,14 @@ class Series(models.Model):
     name = fields.Char()
     event_id = fields.Many2one('natacion.event')
     result_ids = fields.One2many('natacion.result', 'series_id')
+    winner_id = fields.Many2one('res.partner', string='Ganador', compute='_compute_winner', store=True, readonly=True
+)
+    
+    @api.depends('result_ids.rank', 'result_ids.swimmer_id')
+    def _compute_winner(self):
+        for series in self:
+            winner_result = series.result_ids.filtered(lambda r: r.rank == 1)
+            series.winner_id = winner_result[0].swimmer_id if winner_result else False
 
 
 

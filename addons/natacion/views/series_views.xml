@@ -19,6 +19,7 @@
                         <group string="Series Data">
                             <field name="name" />
                             <field name="event_id" />
+                            <field name="winner_id" readonly="1"/>
                             <field name="result_ids"/>
                         </group>
                     </sheet>
