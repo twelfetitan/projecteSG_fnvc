@@ -119,6 +119,8 @@
                                             <b>Club:</b>
                                             <t t-esc="record.club_id.value" />
                                         </span>
+
+                                        
                                     </div>
                                 </div>
                             </div>

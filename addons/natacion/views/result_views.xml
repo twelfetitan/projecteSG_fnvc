@@ -18,9 +18,9 @@
                 <form>
                     <sheet>
                         <group string="Result Data">
+                            <field name="series_id"/>
                             <field name="swimmer_id" />
                             <field name="time" />
-                            <field name="series_id"/>
                             <field name="rank"/>
                         </group>
                     </sheet>

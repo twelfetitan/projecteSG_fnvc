@@ -26,6 +26,9 @@
                             <field name="swimmer_ids"/>
                             <field name="series_ids"/>
                         </group>
+
+                        
+
                     </sheet>
                 </form>
             </field>

@@ -31,6 +31,7 @@
                         <group>
                             <group string="Información del Club">
                                 <field name="town" />
+                                <field name="points" />
                             </group>
 
                             <group class="oe_right" style="text-align:center; margin-top:10px;">

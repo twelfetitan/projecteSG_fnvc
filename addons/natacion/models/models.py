@@ -12,48 +12,118 @@ class Club(models.Model):
     name = fields.Char()
     town = fields.Char()
     member_ids = fields.One2many('res.partner', 'club_id')
+    points = fields.Integer(string='Points', default=0)
     image = fields.Image()
 
+    # Campos computados, solo en memoria
     ranking = fields.Integer(string="Ranking", compute='_compute_ranking', store=False)
     ranking_icon = fields.Char(compute='_compute_ranking_icon', store=False)
     ranking_color = fields.Char(compute='_compute_ranking_color', store=False)
     ranking_ribbon = fields.Html(string="Ribbon", compute='_compute_ranking_ribbon', store=False)
 
-    @api.depends('member_ids')
+    @api.model
+    def set_default_points(self):
+        """Poner a 0 los puntos de clubes sin valor"""
+        self.search([('points', '=', False)]).write({'points': 0})
+
+    @api.depends('points')
     def _compute_ranking(self):
-        clubs = self.search([])
-        clubs_sorted = sorted(clubs, key=lambda c: len(c.member_ids), reverse=True)
-        for idx, c in enumerate(clubs_sorted, start=1):
-            c.ranking = idx
+        """Ranking por puntos: más puntos = mejor posición"""
+        clubs = self.search([])  # traer todos los clubes
+        clubs_sorted = sorted(clubs, key=lambda c: c.points, reverse=True)
+        ranking_map = {c.id: idx+1 for idx, c in enumerate(clubs_sorted)}
+        for c in self:
+            c.ranking = ranking_map.get(c.id, 0)
 
     @api.depends('ranking')
     def _compute_ranking_icon(self):
         for c in self:
-            if c.ranking == 1:
-                c.ranking_icon = "🥇"
-            elif c.ranking == 2:
-                c.ranking_icon = "🥈"
-            elif c.ranking == 3:
-                c.ranking_icon = "🥉"
-            else:
-                c.ranking_icon = ""
+            c.ranking_icon = {1: "🥇", 2: "🥈", 3: "🥉"}.get(c.ranking, "")
 
     @api.depends('ranking')
     def _compute_ranking_color(self):
         for c in self:
-            if c.ranking == 1:
-                c.ranking_color = "#FFD700"
-            elif c.ranking == 2:
-                c.ranking_color = "#C0C0C0"
-            elif c.ranking == 3:
-                c.ranking_color = "#CD7F32"
-            else:
-                c.ranking_color = "#FFFFFF"
+            c.ranking_color = {
+                1: "#FFD700",
+                2: "#C0C0C0",
+                3: "#CD7F32"
+            }.get(c.ranking, "#FFFFFF")
 
     @api.depends('ranking_color')
     def _compute_ranking_ribbon(self):
         for c in self:
             c.ranking_ribbon = f'<div style="width:100%; height:8px; background-color:{c.ranking_color};"></div>'
+
+
+
+
+class Result(models.Model):
+    _name = 'natacion.result'
+    _description = 'resultado'
+
+    swimmer_id = fields.Many2one('res.partner', string="Swimmer")
+    series_id = fields.Many2one('natacion.series')
+    time = fields.Integer()
+    rank = fields.Integer()
+
+    # Solo puntuaran los 5 primeros
+    POINTS_BY_RANK = {
+        1: 7,
+        2: 5,
+        3: 3,
+        4: 2,
+        5: 1
+    }
+
+    def _update_club_points(self, old_rank, new_rank):
+        """Actualiza puntos del club restando puntos antiguos y sumando nuevos,
+        asegurando que nunca queden negativos.
+        """
+        club = self.swimmer_id.club_id
+        if not club:
+            return
+        
+        old_points = self.POINTS_BY_RANK.get(old_rank, 0) if old_rank else 0
+        new_points = self.POINTS_BY_RANK.get(new_rank, 0) if new_rank else 0
+
+        # Nunca permitir puntos negativos
+        club.points = max(0, club.points - old_points + new_points)
+
+    @api.model
+    def create(self, vals):
+        record = super().create(vals)
+        new_rank = vals.get("rank")
+        if new_rank:
+            record._update_club_points(old_rank=None, new_rank=new_rank)
+        return record
+
+    def write(self, vals):
+        res = super().write(vals)
+
+        # Recalcular ranks y puntos por serie
+        for series in self.mapped('series_id'):
+            # Obtener resultados ordenados por rank en memoria
+            results = series.result_ids.sorted(key=lambda r: r.rank or 999)
+
+            used_ranks = set()
+            for r in results:
+                if r.rank in used_ranks or r.rank is None:
+                    # Asignar el siguiente rank disponible
+                    next_rank = 1
+                    while next_rank in used_ranks:
+                        next_rank += 1
+                    old_rank = r.rank
+                    r.rank = next_rank
+                    r._update_club_points(old_rank, next_rank)
+                    used_ranks.add(next_rank)
+                else:
+                    used_ranks.add(r.rank)
+
+        return res
+    
+    
+
+
 
 class Category(models.Model):
     _name = 'natacion.category'
@@ -246,7 +316,23 @@ class Event(models.Model):
             for swimmer in event.swimmer_ids:
                 if not getattr(swimmer, 'quota_valid', False):
                     raise UserError(f"El nadador {swimmer.name} no tiene una cuota válida y no puede participar.")
+                
 
+    winner_1_id = fields.Many2one('res.partner', string="1º Clasificado", compute="_compute_winners", store=False)
+    winner_2_id = fields.Many2one('res.partner', string="2º Clasificado", compute="_compute_winners", store=False)
+    winner_3_id = fields.Many2one('res.partner', string="3º Clasificado", compute="_compute_winners", store=False)
+
+    @api.depends('series_ids.result_ids.rank')
+    def _compute_winners(self):
+        for event in self:
+            results = self.env['natacion.result'].search([
+                ('series_id', 'in', event.series_ids.ids),
+                ('rank', '>', 0)
+            ], order='rank asc')
+
+            event.winner_1_id = results[0].swimmer_id if len(results) > 0 else False
+            event.winner_2_id = results[1].swimmer_id if len(results) > 1 else False
+            event.winner_3_id = results[2].swimmer_id if len(results) > 2 else False
 
 class Series(models.Model):
     _name = 'natacion.series'
@@ -257,11 +343,4 @@ class Series(models.Model):
     result_ids = fields.One2many('natacion.result', 'series_id')
 
 
-class Result(models.Model):
-    _name = 'natacion.result'
-    _description = 'resultado'
 
-    swimmer_id = fields.Many2one('res.partner')
-    series_id = fields.Many2one('natacion.series')
-    time = fields.Integer()
-    rank = fields.Integer()
