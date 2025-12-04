@@ -122,9 +122,28 @@ class Category(models.Model):
     _name = 'natacion.category'
     _description = 'categoria'
 
-    name = fields.Char()
-    minimum_age = fields.Integer()
-    maximum_age = fields.Integer()
+    name = fields.Char(required=True)
+    minimum_age = fields.Integer(required=True)
+    maximum_age = fields.Integer(required=True)
+
+    @api.constrains('minimum_age', 'maximum_age')
+    def _check_age_overlap(self):
+        for cat in self:
+            if cat.minimum_age > cat.maximum_age:
+                raise UserError("La edad mínima no puede ser mayor que la máxima.")
+
+            overlap = self.search([
+                ('id', '!=', cat.id),
+                ('minimum_age', '<=', cat.maximum_age),
+                ('maximum_age', '>=', cat.minimum_age),
+            ])
+
+            if overlap:
+                raise UserError(
+                    "Las categorías no pueden solaparse. Solapa con: " +
+                    ", ".join(overlap.mapped('name'))
+                )
+
 
 
 class Swimmer(models.Model):
@@ -273,8 +292,10 @@ class Championship(models.Model):
         column2='swimmer_id'
     )
     session_ids = fields.One2many('natacion.session', 'championship_id')
-    start_date = fields.Char()
-    end_date = fields.Char()
+
+    start_date = fields.Date(required=True)
+    end_date = fields.Date()
+
 
 
 class Session(models.Model):
@@ -282,9 +303,46 @@ class Session(models.Model):
     _description = 'sesion'
 
     name = fields.Char()
-    date = fields.Char()
+    date = fields.Datetime(string="Fecha y hora", required=True)
     championship_id = fields.Many2one('natacion.championship')
     event_ids = fields.One2many('natacion.event', 'session_id')
+
+    # 🔥 FALTABA ESTE CAMPO
+    duration_minutes = fields.Integer(
+        string="Duración total (min)",
+        compute="_compute_duration",
+        store=True
+    )
+
+    @api.constrains('date')
+    def _check_session_after_championship(self):
+        for s in self:
+            if s.championship_id and s.date.date() < s.championship_id.start_date:
+                raise UserError("La sesión debe ser posterior al inicio del campeonato.")
+            
+    @api.constrains('date')
+    def _check_no_overlap(self):
+        for s in self:
+            others = self.search([
+                ('id', '!=', s.id),
+                ('date', '=', s.date),
+            ])
+            if others:
+                raise UserError("Ya existe otra sesión en ese mismo día y hora.")
+            
+    @api.depends('event_ids.swimmer_ids')
+    def _compute_duration(self):
+        for s in self:
+            total = 0
+            for event in s.event_ids:
+                swimmers = len(event.swimmer_ids)
+                series = (swimmers + 7) // 8  # 8 nadadores por serie
+                total += series * 10
+            s.duration_minutes = total
+
+
+
+
 
 
 class Event(models.Model):

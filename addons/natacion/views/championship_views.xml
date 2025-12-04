@@ -1,12 +1,16 @@
 <odoo>
     <data>
+
         <record model="ir.ui.view" id="natacion.championship_list">
-            <field name="name">natacion list</field>
+            <field name="name">natacion.championship.list</field>
             <field name="model">natacion.championship</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name" />
-                    <field name="club_ids" />
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="club_ids"/>
+                    <field name="session_ids"/>
                 </list>
             </field>
         </record>
@@ -17,17 +21,51 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group string="Championship Data">
-                            <field name="name" />
-                            <field name="club_ids" />
-                            <field name="swimmer_ids"/>
-                            <field name="session_ids"/>
+                        <group>
+                            <field name="name"/>
                             <field name="start_date"/>
                             <field name="end_date"/>
                         </group>
+
+                        <notebook>
+                            <page string="Clubs">
+                                <field name="club_ids" widget="many2many_tags"/>
+                            </page>
+
+                            <page string="Nadadores">
+                                <field name="swimmer_ids"/>
+                            </page>
+
+                            <page string="Sesiones">
+                                <field name="session_ids"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
+
+        <record id="natacion.championship_calendar" model="ir.ui.view">
+            <field name="name">natacion.championship.calendar</field>
+            <field name="model">natacion.championship</field>
+            <field name="arch" type="xml">
+                <calendar string="Campeonatos"
+                          date_start="start_date"
+                          date_stop="end_date"
+                          color="name">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+
+
+
+        <record id="natacion.championship_action" model="ir.actions.act_window">
+            <field name="name">Campeonatos</field>
+            <field name="res_model">natacion.championship</field>
+            <field name="view_mode">list,form,calendar</field>
+            <field name="view_id" ref="natacion.championship_calendar"></field>
+        </record>
+
     </data>
 </odoo>

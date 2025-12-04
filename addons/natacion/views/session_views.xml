@@ -1,31 +1,64 @@
 <odoo>
     <data>
+
+        <!-- TREE LIST VIEW -->
         <record model="ir.ui.view" id="natacion.session_list">
-            <field name="name">natacion list</field>
+            <field name="name">natacion.session.list</field>
             <field name="model">natacion.session</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name" />
-                    <field name="date" />
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="championship_id"/>
+                    <field name="duration_minutes"/>
                 </list>
             </field>
         </record>
 
+        <!-- FORM VIEW -->
         <record model="ir.ui.view" id="natacion.session_form_view">
             <field name="name">natacion.session.form</field>
             <field name="model">natacion.session</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group string="Session Data">
-                            <field name="name" />
-                            <field name="date" />
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
                             <field name="championship_id"/>
+                            <field name="duration_minutes" readonly="1"/>
+                        </group>
+
+                        <group string="Eventos de esta sesión">
                             <field name="event_ids"/>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
+
+        <!-- CALENDAR VIEW -->
+        <record id="natacion.session_calendar" model="ir.ui.view">
+            <field name="name">natacion.session.calendar</field>
+            <field name="model">natacion.session</field>
+            <field name="arch" type="xml">
+                <calendar
+                    string="Sesiones"
+                    date_start="date"
+                    color="championship_id">
+                    
+                    <field name="name"/>
+                    <field name="duration_minutes"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Acción con vista calendar incluida -->
+        <record id="natacion.session_action" model="ir.actions.act_window">
+            <field name="name">Sesiones</field>
+            <field name="res_model">natacion.session</field>
+            <field name="view_mode">tree,form,calendar</field>
+        </record>
+
     </data>
 </odoo>

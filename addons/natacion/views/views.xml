@@ -100,39 +100,39 @@
 
     <!-- menu categories -->
 
-    <menuitem name="Menu 1" id="natacion.menu_1" parent="natacion.menu_root"/>
+    <menuitem name="Menu" id="natacion.menu_1" parent="natacion.menu_root"/>
 
 
     <!-- actions -->
 
-    <menuitem name="club" id="natacion.menu_club" parent="natacion.menu_1"
+    <menuitem name="Club" id="natacion.menu_club" parent="natacion.menu_1"
               action="natacion.action_club_window"/>
 
-    <menuitem name="category" id="natacion.menu_category" parent="natacion.menu_1"
+    <menuitem name="Category" id="natacion.menu_category" parent="natacion.menu_1"
               action="natacion.action_category_window"/>
 
-    <menuitem name="swimmer" id="natacion.swimmer" parent="natacion.menu_1"
+    <menuitem name="Swimmer" id="natacion.swimmer" parent="natacion.menu_1"
               action="natacion.action_swimmer_window"/>
 
-    <menuitem name="besttime" id="natacion.besttime" parent="natacion.menu_1"
+    <menuitem name="Besttime" id="natacion.besttime" parent="natacion.menu_1"
               action="natacion.action_besttime_window"/>
 
-    <menuitem name="style" id="natacion.menu_style" parent="natacion.menu_1"
+    <menuitem name="Style" id="natacion.menu_style" parent="natacion.menu_1"
               action="natacion.action_style_window"/>
 
-    <menuitem name="championship" id="natacion.menu_championship" parent="natacion.menu_1"
+    <menuitem name="Championship" id="natacion.menu_championship" parent="natacion.menu_1"
               action="natacion.action_championship_window"/>
 
     <menuitem name="session" id="natacion.menu_session" parent="natacion.menu_1"
               action="natacion.action_session_window"/>
 
-    <menuitem name="event" id="natacion.menu_event" parent="natacion.menu_1"
+    <menuitem name="Event" id="natacion.menu_event" parent="natacion.menu_1"
               action="natacion.action_event_window"/>
 
-    <menuitem name="series" id="natacion.menu_series" parent="natacion.menu_1"
+    <menuitem name="Series" id="natacion.menu_series" parent="natacion.menu_1"
               action="natacion.action_series_window"/>
 
-    <menuitem name="result" id="natacion.menu_result" parent="natacion.menu_1"
+    <menuitem name="Result" id="natacion.menu_result" parent="natacion.menu_1"
               action="natacion.action_result_window"/>
 
   </data>
