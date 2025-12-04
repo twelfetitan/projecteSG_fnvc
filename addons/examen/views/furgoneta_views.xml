@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="examen.furgoneta_form_view">
+            <field name="name">examen.futgoneta.form</field>
+            <field name="model">examen.furgoneta</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Furgoneta">
+                            <field name="capacitat" />
+                            <field name="matricula" />
+                            <field name="viajes_ids" />
+                            <field name="paquets_ids" />
+                            <field name="imagen"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

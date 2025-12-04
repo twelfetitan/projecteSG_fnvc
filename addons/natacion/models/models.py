@@ -307,7 +307,6 @@ class Session(models.Model):
     championship_id = fields.Many2one('natacion.championship')
     event_ids = fields.One2many('natacion.event', 'session_id')
 
-    # 🔥 FALTABA ESTE CAMPO
     duration_minutes = fields.Integer(
         string="Duración total (min)",
         compute="_compute_duration",
