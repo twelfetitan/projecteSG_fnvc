@@ -13,17 +13,17 @@
         </record>
 
 
+
         <record model="ir.ui.view" id="examen.viatge_search_view">
-    <field name="name">examen.viatge.search</field>
-    <field name="model">examen.viatge</field>
-    <field name="arch" type="xml">
-        <search>
-            <field name="furgoneta" />
-                    <filter string="Furgoneta" name="furgoneta_filter"
-                        domain="[('furgoneta', '!=', False)]" />
-        </search>
-    </field>
-</record>
+            <field name="name">examen.viatge.search</field>
+            <field name="model">examen.viatge</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="furgoneta" />
+                    <filter string="Furgoneta" name="furgoneta_filter" domain="[('furgoneta', '!=', False)]" />
+                </search>
+            </field>
+        </record>
 
 
 
