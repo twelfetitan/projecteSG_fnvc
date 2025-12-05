@@ -24,6 +24,7 @@ Long description of module's purpose
     'data': [
         'security/ir.model.access.csv',
         'views/furgoneta_views.xml',
+        'views/viatge.views.xml',
         'views/views.xml',
         'views/templates.xml',
     ],

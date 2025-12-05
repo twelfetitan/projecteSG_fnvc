@@ -1,5 +1,18 @@
 <odoo>
     <data>
+
+        <record model="ir.ui.view" id="examen.furgoneta_list">
+            <field name="name">examen list</field>
+            <field name="model">examen.furgoneta</field>
+            <field name="arch" type="xml">
+                <list string="Furgoneta">
+                    <field name="matricula" />
+                    <field name="capacitat" />
+                </list>
+
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="examen.furgoneta_form_view">
             <field name="name">examen.futgoneta.form</field>
             <field name="model">examen.furgoneta</field>
@@ -9,13 +22,61 @@
                         <group string="Furgoneta">
                             <field name="capacitat" />
                             <field name="matricula" />
-                            <field name="viajes_ids" />
-                            <field name="paquets_ids" />
-                            <field name="imagen"/>
+                            <field name="llista" />
+                            <field name="image"/>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="examen.furgoneta_kanban_view">
+            <field name="name">examen.furgoneta.kanban</field>
+            <field name="model">examen.furgoneta</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_example">
+                    <field name="matricula" />
+                    <field name="image" />
+                    <field name="capacitat" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_global_click">
+                                    <div class="o_kanban_image">
+                                        <img
+                                            t-att-src="kanban_image('examen.furgoneta', 'image', record.id.value)"
+                                            class="oe_avatar" alt="Imagen" />
+                                        <span>
+                                            <b>Matricula:</b>
+                                            <t t-esc="record.matricula.value" />
+                                        </span>
+                                        <br />
+                                        <span>
+                                            <b>capacitat:</b>
+                                            <t t-esc="record.capacitat.value" />
+                                        </span>
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="examen.action_furgoneta_window">
+            <field name="name">examen.futgoneta.form</field>
+            <field name="res_model">examen.furgoneta</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="view_id" ref="examen.furgoneta_list" />
+            <field name="view_ids"
+                eval="[(5, 0, 0), 
+                                  (0, 0, {'view_mode': 'kanban', 'view_id': ref('examen.furgoneta_kanban_view')}),
+                                  (0, 0, {'view_mode': 'list', 'view_id': ref('examen.furgoneta_list')}),
+                                  (0, 0, {'view_mode': 'form', 'view_id': ref('examen.furgoneta_form_view')})]" />
+        </record>
+
     </data>
 </odoo>

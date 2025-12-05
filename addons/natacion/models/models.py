@@ -98,12 +98,10 @@ class Result(models.Model):
         return record
 
     def write(self, vals):
-    # Guardar los ranks anteriores ANTES de escribir
         old_ranks = {rec.id: rec.rank for rec in self}
 
         res = super().write(vals)
 
-    # Si no se está modificando el rank, no haces nada
         if "rank" not in vals:
             return res
 

@@ -17,6 +17,12 @@
 
     <!-- actions opening views on models -->
 
+    <record model="ir.actions.act_window" id="examen.action_conductor_window">
+      <field name="name">examen Conductor window</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
     <record model="ir.actions.act_window" id="examen.action_furgoneta_window">
       <field name="name">examen Furgoneta window</field>
       <field name="res_model">examen.furgoneta</field>
@@ -44,6 +50,8 @@
     <menuitem name="Examen" id="examen.menu" parent="examen.menu_root"/>
 
 
+    <menuitem name="Conductor" id="examen.conductor" parent="examen.menu"
+              action="examen.action_conductor_window"/>
     
     <menuitem name="Furgoneta" id="examen.menu_furgoneta" parent="examen.menu"
               action="examen.action_furgoneta_window"/>
