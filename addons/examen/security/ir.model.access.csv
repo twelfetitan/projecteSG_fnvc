@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-
-access_examen_furgoneta,examen.furgoneta,model_examen_furgoneta,base.group_user,1,1,1,1
-access_examen_paquet,examen.paquet,model_examen_paquet,base.group_user,1,1,1,1
-access_examen_viatge,examen.viatge,model_examen_viatge,base.group_user,1,1,1,1
-
-
