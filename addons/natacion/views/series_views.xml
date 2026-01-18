@@ -10,21 +10,57 @@
             </field>
         </record>
 
+        <record id="action_natacion_series_wizard" model="ir.actions.act_window">
+            <field name="name">Series Wizard</field>
+            <field name="res_model">natacion.series_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_natacion_series_wizard_form" />
+            <field name="target">new</field>
+        </record>
+
         <record model="ir.ui.view" id="natacion.series_form_view">
             <field name="name">natacion.series.form</field>
             <field name="model">natacion.series</field>
             <field name="arch" type="xml">
                 <form>
-                    <sheet>
-                        <group string="Series Data">
-                            <field name="name" />
-                            <field name="event_id" />
-                            <field name="winner_id" readonly="1"/>
-                            <field name="result_ids"/>
-                        </group>
-                    </sheet>
+                    <notebook>
+                        <page>
+                            <sheet>
+                                <group string="Series Data">
+                                    <field name="name" />
+                                    <field name="event_id" />
+                                    <field name="winner_id" readonly="1" />
+                                    <field name="result_ids" />
+                                </group>
+                            </sheet>
+                            <button name="%(action_natacion_series_wizard)d"
+                                string="ABRIR WIZARD PRUEBA"
+                                type="action"
+                                class="btn-primary oe_highlight" />
+                        </page>
+                        
+                    </notebook>
                 </form>
             </field>
         </record>
+
+
+        <record model="ir.ui.view" id="view_natacion_series_wizard_form">
+            <field name="name">natacion.series.wizard.form</field>
+            <field name="model">natacion.series_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Series Wizard">
+                    <group>
+                        <field name="name" />
+                        <field name="types" />
+                    </group>
+                    <footer>
+                        <button string="Cerrar" special="cancel" class="btn-secondary" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
     </data>
 </odoo>
