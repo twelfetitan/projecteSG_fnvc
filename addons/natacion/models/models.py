@@ -264,6 +264,50 @@ class Championship(models.Model):
             },
         }
 
+class Championship_swimmers_wizard(models.TransientModel):
+    _name = 'natacion.championship_swimmers_wizard'
+    _description = 'championship_swimmers_wizard'
+
+    championship_id = fields.Many2one(
+        'natacion.championship',
+        required=True,
+        default=lambda self: self.env.context.get('active_id'),
+    )
+
+    swimmer_ids = fields.Many2many(
+        'res.partner',
+        string='Nadadores',
+        relation='natacion_championship_swimmer_wizard_rel',
+        column1='wizard_id',
+        column2='partner_id',
+        domain="[('is_swimmer', '=', True)]",
+    )
+
+    swimmer_quota_valid = fields.Many2many(
+        'res.partner',
+        compute='_compute_quota_status',
+        string='Nadadores con Cuota'
+    )
+
+    @api.onchange('championship_id')
+    def _onchange_championship(self):
+        return {'domain': {'swimmer_ids': [('is_swimmer', '=', True)]}}
+
+    def action_confirm(self):
+        if not self.swimmer_ids:
+            raise UserError("¡Selecciona nadadores!")
+        invalid = self.swimmer_ids.filtered(lambda s: not s.quota_valid)
+        if invalid:
+            raise UserError(f"Sin cuota: {', '.join(invalid.mapped('name'))}")
+        self.championship_id.swimmer_ids |= self.swimmer_ids
+        return {'type': 'ir.actions.act_window_close'}
+
+    @api.depends('swimmer_ids')
+    def _compute_quota_status(self):
+        for record in self:
+            record.swimmer_quota_valid = [
+                (6, 0, [partner.id for partner in record.swimmer_ids.filtered(lambda p: p.has_paid_quota())])
+            ]
 
 
 class Session(models.Model):
@@ -380,10 +424,3 @@ class Series(models.Model):
             series.winner_id = winner_result[0].swimmer_id if winner_result else False
 
 
-class Series_wizard(models.TransientModel):
-    _name = 'natacion.series_wizard'
-    _description = 'series_wizard'
-
-    name = fields.Char()
-    types = fields.Char()
-    
