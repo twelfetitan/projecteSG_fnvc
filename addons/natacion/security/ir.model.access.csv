@@ -9,3 +9,4 @@ access_natacion_event,natacion.event,model_natacion_event,base.group_user,1,1,1,
 access_natacion_series,natacion.series,model_natacion_series,base.group_user,1,1,1,1
 access_natacion_result,natacion.result,model_natacion_result,base.group_user,1,1,1,1
 access_natacion_championship_swimmers_wizard,natacion.championship_swimmers_wizard,model_natacion_championship_swimmers_wizard,base.group_user,1,1,1,1
+access_natacion_session_wizard,natacion.session_wizard,model_natacion_session_wizard,base.group_user,1,1,1,1

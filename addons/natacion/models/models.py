@@ -265,8 +265,8 @@ class Championship(models.Model):
         }
 
 class Championship_swimmers_wizard(models.TransientModel):
-    _name = 'natacion.championship_swimmers_wizard'
-    _description = 'championship_swimmers_wizard'
+    _name = 'natacion.championship.swimmers.wizard'
+    _description = 'Championship Swimmers Wizard'
 
     championship_id = fields.Many2one(
         'natacion.championship',
@@ -276,11 +276,11 @@ class Championship_swimmers_wizard(models.TransientModel):
 
     swimmer_ids = fields.Many2many(
         'res.partner',
-        string='Nadadores',
+        string='Nadadores (Clubs Inscritos)',
         relation='natacion_championship_swimmer_wizard_rel',
         column1='wizard_id',
         column2='partner_id',
-        domain="[('is_swimmer', '=', True)]",
+        domain="[]",  # ← Domain dinámico abajo
     )
 
     swimmer_quota_valid = fields.Many2many(
@@ -289,25 +289,47 @@ class Championship_swimmers_wizard(models.TransientModel):
         string='Nadadores con Cuota'
     )
 
+    @api.depends('championship_id')
+    def _compute_swimmer_domain(self):
+        """DOMAIN dinámico: FILTRA lista sin poblar"""
+        for wizard in self:
+            if wizard.championship_id.club_ids:
+                enrolled_clubs = wizard.championship_id.club_ids.ids
+                domain = [
+                    ('is_swimmer', '=', True),
+                    ('club_id', 'in', enrolled_clubs),  # ← Solo clubs inscritos
+                    ('quota_valid', '=', True)  # ← Cuota OK
+                ]
+                return {'domain': {'swimmer_ids': domain}}  # ← SOLO FILTRA, no pobla
+            return {'domain': {'swimmer_ids': [('id', '=', False)]}}  # Vacío
+
     @api.onchange('championship_id')
     def _onchange_championship(self):
-        return {'domain': {'swimmer_ids': [('is_swimmer', '=', True)]}}
-
-    def action_confirm(self):
-        if not self.swimmer_ids:
-            raise UserError("¡Selecciona nadadores!")
-        invalid = self.swimmer_ids.filtered(lambda s: not s.quota_valid)
-        if invalid:
-            raise UserError(f"Sin cuota: {', '.join(invalid.mapped('name'))}")
-        self.championship_id.swimmer_ids |= self.swimmer_ids
-        return {'type': 'ir.actions.act_window_close'}
+        return self._compute_swimmer_domain()  # Trigger domain
 
     @api.depends('swimmer_ids')
     def _compute_quota_status(self):
         for record in self:
-            record.swimmer_quota_valid = [
-                (6, 0, [partner.id for partner in record.swimmer_ids.filtered(lambda p: p.has_paid_quota())])
-            ]
+            record.swimmer_quota_valid = record.swimmer_ids.filtered('quota_valid')
+
+    def action_confirm(self):
+        if not self.swimmer_ids:
+            raise UserError("¡Selecciona nadadores!")
+        
+        invalid_clubs = self.swimmer_ids.filtered(
+            lambda s: s.club_id and s.club_id not in self.championship_id.club_ids
+        )
+        if invalid_clubs:
+            raise UserError(f"Clubs no inscritos: {', '.join(invalid_clubs.mapped('club_id.name'))}")
+        
+        invalid_quota = self.swimmer_ids.filtered(lambda s: not s.quota_valid)
+        if invalid_quota:
+            raise UserError(f"Sin cuota: {', '.join(invalid_quota.mapped('name'))}")
+        
+        self.championship_id.swimmer_ids |= self.swimmer_ids
+        return {'type': 'ir.actions.act_window_close'}
+
+
 
 
 class Session(models.Model):
@@ -349,6 +371,38 @@ class Session(models.Model):
                 series = (swimmers + 7) // 8
                 total += series * 10
             s.duration_minutes = total
+
+class Session_wizard(models.TransientModel):
+    _name = 'natacion.session_wizard'
+    _description = 'Session Wizard'
+
+    session_id = fields.Many2one(
+        'natacion.session',
+        required=True,
+        default=lambda self: self.env.context.get('active_id')
+    )
+    championship_id = fields.Many2one(
+        'natacion.championship',
+        related='session_id.championship_id',
+        readonly=True
+    )
+    swimmer_ids = fields.Many2many(
+        'res.partner',
+        string='Nadadores del Campeonato',
+        compute='_compute_swimmers',
+        readonly=True
+    )
+
+    @api.depends('session_id.championship_id.swimmer_ids')
+    def _compute_swimmers(self):
+        for wizard in self:
+            wizard.swimmer_ids = wizard.session_id.championship_id.swimmer_ids
+
+    def action_close(self):
+        return {'type': 'ir.actions.act_window_close'}
+
+
+    
 
 
 class Event(models.Model):

@@ -7,12 +7,44 @@
             <field name="model">natacion.session</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name"/>
-                    <field name="date"/>
-                    <field name="championship_id"/>
-                    <field name="duration_minutes"/>
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="championship_id" />
+                    <field name="duration_minutes" />
                 </list>
             </field>
+        </record>
+
+        <!-- FORM VIEW WIZARD -->
+        <record model="ir.ui.view" id="view_natacion_sesion_wizard_form">
+            <field name="name">natacion.sesion.wizard.form</field>
+            <field name="model">natacion.session_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Nadadores del Campeonato">
+                    <group>
+                    <field name="session_id" readonly="1"/>
+                    <field name="championship_id" readonly="1"/>
+                </group>
+                
+                    <group>
+                        <field name="swimmer_ids" 
+                        widget="many2many_tags"
+                        string="Nadadores del Camponato" />
+                    </group>
+                    <footer>
+                        <button string="Cancelar" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- ACTION WIZARD -->
+        <record id="action_natacion_session_wizard" model="ir.actions.act_window">
+            <field name="name">Session wizard</field>
+            <field name="res_model">natacion.session_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_natacion_sesion_wizard_form" />
+            <field name="target">new</field>
         </record>
 
         <!-- FORM VIEW -->
@@ -23,15 +55,20 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="date"/>
-                            <field name="championship_id"/>
-                            <field name="duration_minutes" readonly="1"/>
+                            <field name="name" />
+                            <field name="date" />
+                            <field name="championship_id" />
+                            <field name="duration_minutes" readonly="1" />
                         </group>
 
                         <group string="Eventos de esta sesión">
-                            <field name="event_ids"/>
+                            <field name="event_ids" />
                         </group>
+
+                        <button name="%(action_natacion_session_wizard)d"
+                                string="ABRIR LISTA NADADORES"
+                                type="action"
+                                class="btn-primary oe_highlight" />
                     </sheet>
                 </form>
             </field>
@@ -46,9 +83,9 @@
                     string="Sesiones"
                     date_start="date"
                     color="championship_id">
-                    
-                    <field name="name"/>
-                    <field name="duration_minutes"/>
+
+                    <field name="name" />
+                    <field name="duration_minutes" />
                 </calendar>
             </field>
         </record>

@@ -1,57 +1,55 @@
 <odoo>
     <data>
 
+        <!-- List View (sin cambios) -->
         <record model="ir.ui.view" id="natacion.championship_list">
             <field name="name">natacion.championship.list</field>
             <field name="model">natacion.championship</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name" />
-                    <field name="start_date" />
-                    <field name="end_date" />
-                    <field name="club_ids" />
-                    <field name="session_ids" />
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="club_ids"/>
+                    <field name="session_ids"/>
                 </list>
             </field>
         </record>
 
-
+        <!-- Wizard Form COMPLETO (plural + limpio) -->
         <record model="ir.ui.view" id="view_natacion_championship_swimmers_wizard_form">
             <field name="name">natacion.championship.swimmers.wizard.form</field>
-            <field name="model">natacion.championship_swimmers_wizard</field>
+            <field name="model">natacion.championship.swimmers.wizard</field>
             <field name="arch" type="xml">
-                <form string="Swimmers Wizard">
-                    <group>
-                        <field name="championship_id" invisible="1" />
-                        <form string="Swimmers Wizard">
-                            <group>
-                                <field name="championship_id" invisible="1" />
-                                <field name="swimmer_ids" widget="many2many_tags" string="Nadadores" />
-                            </group>
-        
-                        </form>
-
-                    </group>
-
-
+                <form string="Inscripción Nadadores">
+                    <sheet>
+                        <group>
+                            <field name="championship_id" readonly="1"/>
+                            <label for="swimmer_ids" string="Nadadores de clubs inscritos (cuota OK)"/>
+                            <field name="swimmer_ids" nolabel="1" widget="many2many_tags"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="swimmer_quota_valid" invisible="1"/>
+                        </group>
+                    </sheet>
                     <footer>
-                        <button name="action_confirm" string="Inscribir" type="object"
-                            class="btn-primary" invisible="not swimmer_ids" />
-
-                        <button string="Cancelar" special="cancel" />
+                        <button name="action_confirm" string="Inscribir" 
+                                type="object" class="btn-primary oe_highlight"/>
+                        <button string="Cancelar" special="cancel" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>
         </record>
 
+        <!-- Acción Wizard (plural) -->
         <record id="action_natacion_championship_swimmers_wizard" model="ir.actions.act_window">
-            <field name="name">Championship Swimmers Wizard</field>
-            <field name="res_model">natacion.championship_swimmers_wizard</field>
+            <field name="name">Inscripción Nadadores</field>
+            <field name="res_model">natacion.championship.swimmers.wizard</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_natacion_championship_swimmers_wizard_form" />
+            <field name="view_id" ref="view_natacion_championship_swimmers_wizard_form"/>
             <field name="target">new</field>
         </record>
 
+        <!-- Form Championship (botón incluido) -->
         <record model="ir.ui.view" id="natacion.championship_form_view">
             <field name="name">natacion.championship.form</field>
             <field name="model">natacion.championship</field>
@@ -59,26 +57,24 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="name" />
-                            <field name="start_date" />
-                            <field name="end_date" />
+                            <field name="name"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
                         </group>
+                        <!-- Botón principal -->
                         <button name="%(action_natacion_championship_swimmers_wizard)d"
-                            string="Introducir Nadador"
-                            type="action"
-                            class="btn-primary oe_highlight" />
-
+                                string="Introducir Nadador"
+                                type="action"
+                                class="btn-primary oe_highlight"/>
                         <notebook>
                             <page string="Clubs">
-                                <field name="club_ids" widget="many2many_tags" />
+                                <field name="club_ids" widget="many2many_tags"/>
                             </page>
-
                             <page string="Nadadores">
-                                <field name="swimmer_ids" />
+                                <field name="swimmer_ids"/>
                             </page>
-
                             <page string="Sesiones">
-                                <field name="session_ids" />
+                                <field name="session_ids"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -86,25 +82,25 @@
             </field>
         </record>
 
+        <!-- Calendar (sin cambios) -->
         <record id="natacion.championship_calendar" model="ir.ui.view">
             <field name="name">natacion.championship.calendar</field>
             <field name="model">natacion.championship</field>
             <field name="arch" type="xml">
                 <calendar string="Campeonatos"
-                    date_start="start_date"
-                    date_stop="end_date"
-                    color="name">
-                    <field name="name" />
+                          date_start="start_date"
+                          date_stop="end_date"
+                          color="name">
+                    <field name="name"/>
                 </calendar>
             </field>
         </record>
 
-
+        <!-- Acción principal (sin cambios) -->
         <record id="natacion.championship_action" model="ir.actions.act_window">
             <field name="name">Campeonatos</field>
             <field name="res_model">natacion.championship</field>
             <field name="view_mode">list,form,calendar</field>
-            <field name="view_id" ref="natacion.championship_calendar"></field>
         </record>
 
     </data>
