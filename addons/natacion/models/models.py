@@ -2,11 +2,14 @@
 from odoo import models, fields, api
 from datetime import date, timedelta
 from odoo.exceptions import UserError
+import random
+
 
 
 class Club(models.Model):
     _name = 'natacion.club'
     _description = 'club'
+
 
     name = fields.Char()
     town = fields.Char()
@@ -14,14 +17,17 @@ class Club(models.Model):
     points = fields.Integer(string='Points', default=0, readonly=True)
     image = fields.Image()
 
+
     ranking = fields.Integer(string="Ranking", compute='_compute_ranking', store=False)
     ranking_icon = fields.Char(compute='_compute_ranking_icon', store=False)
     ranking_color = fields.Char(compute='_compute_ranking_color', store=False)
     ranking_ribbon = fields.Html(string="Ribbon", compute='_compute_ranking_ribbon', store=False)
 
+
     @api.model
     def set_default_points(self):
         self.search([('points', '=', False)]).write({'points': 0})
+
 
     @api.depends('points')
     def _compute_ranking(self):
@@ -31,10 +37,12 @@ class Club(models.Model):
         for c in self:
             c.ranking = ranking_map.get(c.id, 0)
 
+
     @api.depends('ranking')
     def _compute_ranking_icon(self):
         for c in self:
             c.ranking_icon = {1: "🥇", 2: "🥈", 3: "🥉"}.get(c.ranking, "")
+
 
     @api.depends('ranking')
     def _compute_ranking_color(self):
@@ -45,6 +53,7 @@ class Club(models.Model):
                 3: "#CD7F32"
             }.get(c.ranking, "#FFFFFF")
 
+
     @api.depends('ranking_color')
     def _compute_ranking_ribbon(self):
         for c in self:
@@ -53,14 +62,17 @@ class Club(models.Model):
             )
 
 
+
 class Result(models.Model):
     _name = 'natacion.result'
     _description = 'resultado'
+
 
     swimmer_id = fields.Many2one('res.partner', string="Swimmer")
     series_id = fields.Many2one('natacion.series')
     time = fields.Integer()
     rank = fields.Integer()
+
 
     POINTS_BY_RANK = {
         1: 7,
@@ -70,14 +82,17 @@ class Result(models.Model):
         5: 1,
     }
 
+
     def _update_club_points(self, old_rank, new_rank):
         club = self.swimmer_id.club_id
         if not club:
             return
 
+
         old_points = self.POINTS_BY_RANK.get(old_rank, 0) if old_rank else 0
         new_points = self.POINTS_BY_RANK.get(new_rank, 0) if new_rank else 0
         club.points = max(0, club.points - old_points + new_points)
+
 
     @api.model
     def create(self, vals):
@@ -86,6 +101,7 @@ class Result(models.Model):
         if new_rank:
             record._update_club_points(old_rank=None, new_rank=new_rank)
         return record
+
 
     def write(self, vals):
         old_ranks = {rec.id: rec.rank for rec in self}
@@ -99,13 +115,16 @@ class Result(models.Model):
         return res
 
 
+
 class Category(models.Model):
     _name = 'natacion.category'
     _description = 'categoria'
 
+
     name = fields.Char(required=True)
     minimum_age = fields.Integer(required=True)
     maximum_age = fields.Integer(required=True)
+
 
     @api.constrains('minimum_age', 'maximum_age')
     def _check_age_overlap(self):
@@ -124,8 +143,10 @@ class Category(models.Model):
                 )
 
 
+
 class Swimmer(models.Model):
     _inherit = 'res.partner'
+
 
     is_swimmer = fields.Boolean()
     year_birth = fields.Integer()
@@ -148,10 +169,12 @@ class Swimmer(models.Model):
     has_events = fields.Boolean(compute='_compute_has_events', store=False)
     image = fields.Image()
 
+
     @api.depends("year_birth")
     def _get_age(self):
         for s in self:
             s.age = int(fields.Date.to_string(fields.Date.today()).split('-')[0]) - s.year_birth
+
 
     def action_open_res_partner_view(self):
         return {
@@ -163,6 +186,7 @@ class Swimmer(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'current',
         }
+
 
     def pay_quota(self):
         product = self.env.ref("natacion.product_cuota_anual")
@@ -179,6 +203,7 @@ class Swimmer(models.Model):
         })
         self.end_quota = endDt
         return order.get_formview_action()
+
 
     @api.depends("end_quota")
     def _compute_quota_progress(self):
@@ -200,16 +225,19 @@ class Swimmer(models.Model):
             remaining_days = (end - today).days
             s.quota_progress = (remaining_days / total_days) * 100
 
+
     @api.depends('end_quota')
     def _compute_quota_valid(self):
         today = date.today()
         for s in self:
             s.quota_valid = bool(s.end_quota and s.end_quota >= today)
 
+
     @api.depends('event_ids')
     def _compute_event_count(self):
         for s in self:
             s.event_count = len(s.event_ids)
+
 
     @api.depends('event_ids')
     def _compute_has_events(self):
@@ -217,18 +245,22 @@ class Swimmer(models.Model):
             s.has_events = bool(s.event_ids)
 
 
+
 class BestTime(models.Model):
     _name = 'natacion.besttime'
     _description = 'mejor tiempo por estilo'
+
 
     swimmer_id = fields.Many2one('res.partner')
     style_id = fields.Many2one('natacion.style')
     time = fields.Integer()
 
 
+
 class Style(models.Model):
     _name = 'natacion.style'
     _description = 'estilo'
+
 
     name = fields.Char()
     best_swimmer_ids = fields.Many2many(
@@ -239,9 +271,11 @@ class Style(models.Model):
     )
 
 
+
 class Championship(models.Model):
     _name = 'natacion.championship'
     _description = 'campeonato'
+
 
     name = fields.Char()
     club_ids = fields.Many2many('natacion.club')
@@ -249,6 +283,7 @@ class Championship(models.Model):
     session_ids = fields.One2many('natacion.session', 'championship_id')
     start_date = fields.Date(required=True)
     end_date = fields.Date()
+
 
     def action_open_swimmer_wizard(self):
         self.ensure_one()
@@ -264,15 +299,99 @@ class Championship(models.Model):
             },
         }
 
+
+    def action_generate_random(self):
+        """Genera campeonato completo con datos aleatorios reales"""
+        self.ensure_one()
+       
+        from datetime import datetime, timedelta
+        import random
+
+
+       
+        now = datetime.now()
+        start_dt = datetime(
+            year=now.year,
+            month=now.month,
+            day=now.day,
+        ) + timedelta(days=random.randint(7, 30))
+       
+        created_sessions = self.env['natacion.session']
+        for i in range(random.randint(3, 5)):
+            session_dt = start_dt + timedelta(
+                hours=random.randint(9, 20),
+                minutes=[0, 10, 20, 30][i % 4],
+            ) + timedelta(days=i)
+           
+            session = self.env['natacion.session'].create({
+                'name': f'Sesión {i+1}',
+                'date': session_dt,
+                'championship_id': self.id
+            })
+            created_sessions |= session
+       
+       
+        all_swimmers = self.env['res.partner']
+        for session in created_sessions:
+            for j in range(random.randint(4, 6)):
+                event = self.env['natacion.event'].create({
+                    'name': f'{random.choice(["50m", "100m", "200m"])} {random.choice(["Libre", "Espalda", "Pecho", "Mariposa"])}',
+                    'session_id': session.id,
+                })
+               
+                for k in range(random.randint(2, 3)):
+                    series = self.env['natacion.series'].create({
+                        'name': f'Serie {k+1}',
+                        'event_id': event.id
+                    })
+                   
+                    swimmers = self.env['res.partner'].search([
+                        ('is_swimmer', '=', True),
+                        ('quota_valid', '=', True)
+                    ], limit=20)
+                   
+                    if swimmers:
+                        selected_swimmers = random.sample(
+                            list(swimmers),
+                            min(8, len(swimmers))
+                        )
+                       
+                        for idx, swimmer in enumerate(selected_swimmers):
+                            self.env['natacion.result'].create({
+                                'swimmer_id': swimmer.id,
+                                'series_id': series.id,
+                                'time': random.randint(25, 120),
+                                'rank': idx + 1
+                            })
+                            all_swimmers |= swimmer
+       
+        self.swimmer_ids = all_swimmers
+       
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': '✅ ¡Campeonato generado!',
+                'message': f'{len(created_sessions)} sesiones, {len(all_swimmers)} nadadores',
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
+
+
+
 class Championship_swimmers_wizard(models.TransientModel):
     _name = 'natacion.championship.swimmers.wizard'
     _description = 'Championship Swimmers Wizard'
+
 
     championship_id = fields.Many2one(
         'natacion.championship',
         required=True,
         default=lambda self: self.env.context.get('active_id'),
     )
+
 
     swimmer_ids = fields.Many2many(
         'res.partner',
@@ -283,11 +402,13 @@ class Championship_swimmers_wizard(models.TransientModel):
         domain="[]",  # ← Domain dinámico abajo
     )
 
+
     swimmer_quota_valid = fields.Many2many(
         'res.partner',
         compute='_compute_quota_status',
         string='Nadadores con Cuota'
     )
+
 
     @api.depends('championship_id')
     def _compute_swimmer_domain(self):
@@ -303,31 +424,35 @@ class Championship_swimmers_wizard(models.TransientModel):
                 return {'domain': {'swimmer_ids': domain}}  # ← SOLO FILTRA, no pobla
             return {'domain': {'swimmer_ids': [('id', '=', False)]}}  # Vacío
 
+
     @api.onchange('championship_id')
     def _onchange_championship(self):
         return self._compute_swimmer_domain()  # Trigger domain
+
 
     @api.depends('swimmer_ids')
     def _compute_quota_status(self):
         for record in self:
             record.swimmer_quota_valid = record.swimmer_ids.filtered('quota_valid')
 
+
     def action_confirm(self):
         if not self.swimmer_ids:
             raise UserError("¡Selecciona nadadores!")
-        
+       
         invalid_clubs = self.swimmer_ids.filtered(
             lambda s: s.club_id and s.club_id not in self.championship_id.club_ids
         )
         if invalid_clubs:
             raise UserError(f"Clubs no inscritos: {', '.join(invalid_clubs.mapped('club_id.name'))}")
-        
+       
         invalid_quota = self.swimmer_ids.filtered(lambda s: not s.quota_valid)
         if invalid_quota:
             raise UserError(f"Sin cuota: {', '.join(invalid_quota.mapped('name'))}")
-        
+       
         self.championship_id.swimmer_ids |= self.swimmer_ids
         return {'type': 'ir.actions.act_window_close'}
+
 
 
 
@@ -335,6 +460,7 @@ class Championship_swimmers_wizard(models.TransientModel):
 class Session(models.Model):
     _name = 'natacion.session'
     _description = 'sesion'
+
 
     name = fields.Char()
     date = fields.Datetime(string="Fecha y hora", required=True)
@@ -346,11 +472,13 @@ class Session(models.Model):
         store=True,
     )
 
+
     @api.constrains('date')
     def _check_session_after_championship(self):
         for s in self:
             if s.championship_id and s.date.date() < s.championship_id.start_date:
                 raise UserError("La sesión debe ser posterior al inicio del campeonato.")
+
 
     @api.constrains('date')
     def _check_no_overlap(self):
@@ -362,6 +490,7 @@ class Session(models.Model):
             if others:
                 raise UserError("Ya existe otra sesión en ese mismo día y hora.")
 
+
     @api.depends('event_ids.swimmer_ids')
     def _compute_duration(self):
         for s in self:
@@ -372,9 +501,11 @@ class Session(models.Model):
                 total += series * 10
             s.duration_minutes = total
 
+
 class Session_wizard(models.TransientModel):
     _name = 'natacion.session_wizard'
     _description = 'Session Wizard'
+
 
     session_id = fields.Many2one(
         'natacion.session',
@@ -393,21 +524,26 @@ class Session_wizard(models.TransientModel):
         readonly=True
     )
 
+
     @api.depends('session_id.championship_id.swimmer_ids')
     def _compute_swimmers(self):
         for wizard in self:
             wizard.swimmer_ids = wizard.session_id.championship_id.swimmer_ids
 
+
     def action_close(self):
         return {'type': 'ir.actions.act_window_close'}
 
 
-    
+
+   
+
 
 
 class Event(models.Model):
     _name = 'natacion.event'
     _description = 'prova'
+
 
     name = fields.Char()
     style_id = fields.Many2one('natacion.style')
@@ -415,6 +551,7 @@ class Event(models.Model):
     session_id = fields.Many2one('natacion.session')
     swimmer_ids = fields.Many2many('res.partner', string="Swimmers")
     series_ids = fields.One2many('natacion.series', 'event_id')
+
 
     @api.constrains('swimmer_ids')
     def _check_quota_validity(self):
@@ -424,6 +561,7 @@ class Event(models.Model):
                     raise UserError(
                         f"El nadador {swimmer.name} no tiene una cuota válida y no puede participar."
                     )
+
 
     winner_1_id = fields.Many2one(
         'res.partner',
@@ -444,6 +582,7 @@ class Event(models.Model):
         store=False,
     )
 
+
     @api.depends('series_ids.result_ids.rank')
     def _compute_winners(self):
         for event in self:
@@ -456,9 +595,11 @@ class Event(models.Model):
             event.winner_3_id = results[2].swimmer_id if len(results) > 2 else False
 
 
+
 class Series(models.Model):
     _name = 'natacion.series'
     _description = 'serie'
+
 
     name = fields.Char()
     event_id = fields.Many2one('natacion.event')
@@ -471,10 +612,9 @@ class Series(models.Model):
         readonly=True,
     )
 
+
     @api.depends('result_ids.rank', 'result_ids.swimmer_id')
     def _compute_winner(self):
         for series in self:
             winner_result = series.result_ids.filtered(lambda r: r.rank == 1)
             series.winner_id = winner_result[0].swimmer_id if winner_result else False
-
-
