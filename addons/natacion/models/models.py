@@ -63,56 +63,25 @@ class Club(models.Model):
 
 
 
+
 class Result(models.Model):
     _name = 'natacion.result'
-    _description = 'resultado'
-
-
-    swimmer_id = fields.Many2one('res.partner', string="Swimmer")
+    
+    swimmer_id = fields.Many2one('res.partner')
     series_id = fields.Many2one('natacion.series')
-    time = fields.Integer()
-    rank = fields.Integer()
+    time = fields.Integer(required=True)  # EJ: 2534 = 25.34s
+    rank = fields.Integer(compute='_compute_rank', store=True)
+    
+    POINTS_BY_RANK = {1:7,2:5,3:3,4:2,5:1}
+    
+    @api.depends('series_id.result_ids.time')
+    def _compute_rank(self):
+        for result in self:
+            if result.series_id:
+                series_results = result.series_id.result_ids.sorted('time')
+                rank_map = {r.id: idx+1 for idx,r in enumerate(series_results)}
+                result.rank = rank_map.get(result.id, 0)
 
-
-    POINTS_BY_RANK = {
-        1: 7,
-        2: 5,
-        3: 3,
-        4: 2,
-        5: 1,
-    }
-
-
-    def _update_club_points(self, old_rank, new_rank):
-        club = self.swimmer_id.club_id
-        if not club:
-            return
-
-
-        old_points = self.POINTS_BY_RANK.get(old_rank, 0) if old_rank else 0
-        new_points = self.POINTS_BY_RANK.get(new_rank, 0) if new_rank else 0
-        club.points = max(0, club.points - old_points + new_points)
-
-
-    @api.model
-    def create(self, vals):
-        record = super().create(vals)
-        new_rank = vals.get("rank")
-        if new_rank:
-            record._update_club_points(old_rank=None, new_rank=new_rank)
-        return record
-
-
-    def write(self, vals):
-        old_ranks = {rec.id: rec.rank for rec in self}
-        res = super().write(vals)
-        if "rank" not in vals:
-            return res
-        for rec in self:
-            old_rank = old_ranks.get(rec.id)
-            new_rank = rec.rank
-            rec._update_club_points(old_rank, new_rank)
-        return res
 
 
 
@@ -271,11 +240,9 @@ class Style(models.Model):
     )
 
 
-
 class Championship(models.Model):
     _name = 'natacion.championship'
     _description = 'campeonato'
-
 
     name = fields.Char()
     club_ids = fields.Many2many('natacion.club')
@@ -283,7 +250,9 @@ class Championship(models.Model):
     session_ids = fields.One2many('natacion.session', 'championship_id')
     start_date = fields.Date(required=True)
     end_date = fields.Date()
-
+    
+    # ✅ NUEVO: Clasificación general HTML
+    general_classification = fields.Html(compute='_compute_general_classification')
 
     def action_open_swimmer_wizard(self):
         self.ensure_one()
@@ -299,84 +268,115 @@ class Championship(models.Model):
             },
         }
 
-
     def action_generate_random(self):
-        """Genera campeonato completo con datos aleatorios reales"""
         self.ensure_one()
-       
+        
+        # ✅ CREA styles/categories SI NO EXISTEN
+        if not self.env['natacion.style'].search([]):
+            styles_data = [('Libre',), ('Espalda',), ('Pecho',), ('Mariposa',)]
+            self.env['natacion.style'].create([{'name': name} for name, in styles_data])
+        
+        if not self.env['natacion.category'].search([]):
+            categories_data = [('Prebenjamín', 6, 7), ('Benjamín', 8, 9), ('Alevín', 10, 12), ('Infantil', 13, 14)]
+            self.env['natacion.category'].create([{'name': name, 'minimum_age': min_age, 'maximum_age': max_age} 
+                                                for name, min_age, max_age in categories_data])
+        
         from datetime import datetime, timedelta
         import random
 
-
-       
         now = datetime.now()
-        start_dt = datetime(
-            year=now.year,
-            month=now.month,
-            day=now.day,
-        ) + timedelta(days=random.randint(7, 30))
-       
+        start_dt = datetime(year=now.year, month=now.month, day=now.day) + timedelta(days=random.randint(7, 30))
+        
         created_sessions = self.env['natacion.session']
-        for i in range(random.randint(3, 5)):
-            session_dt = start_dt + timedelta(
-                hours=random.randint(9, 20),
-                minutes=[0, 10, 20, 30][i % 4],
-            ) + timedelta(days=i)
-           
+        for i in range(3, 6):
             session = self.env['natacion.session'].create({
-                'name': f'Sesión {i+1}',
-                'date': session_dt,
+                'name': f'Sesión {i}',
+                'date': start_dt + timedelta(hours=10 + i, minutes=0, days=i),
                 'championship_id': self.id
             })
             created_sessions |= session
-       
-       
+
         all_swimmers = self.env['res.partner']
+        styles = self.env['natacion.style'].search([])
+        categories = self.env['natacion.category'].search([])
+        
         for session in created_sessions:
-            for j in range(random.randint(4, 6)):
+            for j in range(4, 7):
+                # ✅ ASIGNA style/category SIEMPRE
+                style = random.choice(styles)
+                category = random.choice(categories)
+                
                 event = self.env['natacion.event'].create({
-                    'name': f'{random.choice(["50m", "100m", "200m"])} {random.choice(["Libre", "Espalda", "Pecho", "Mariposa"])}',
+                    'name': f'{random.choice(["50m", "100m"])} {style.name}',
+                    'style_id': style.id,
+                    'category_id': category.id,
                     'session_id': session.id,
                 })
-               
-                for k in range(random.randint(2, 3)):
-                    series = self.env['natacion.series'].create({
-                        'name': f'Serie {k+1}',
-                        'event_id': event.id
-                    })
-                   
-                    swimmers = self.env['res.partner'].search([
-                        ('is_swimmer', '=', True),
-                        ('quota_valid', '=', True)
-                    ], limit=20)
-                   
-                    if swimmers:
-                        selected_swimmers = random.sample(
-                            list(swimmers),
-                            min(8, len(swimmers))
-                        )
-                       
-                        for idx, swimmer in enumerate(selected_swimmers):
-                            self.env['natacion.result'].create({
-                                'swimmer_id': swimmer.id,
-                                'series_id': series.id,
-                                'time': random.randint(25, 120),
-                                'rank': idx + 1
-                            })
-                            all_swimmers |= swimmer
-       
+                
+                series = self.env['natacion.series'].create({
+                    'name': f'Serie {random.randint(1,3)}',
+                    'event_id': event.id
+                })
+                
+                swimmers = self.env['res.partner'].search([
+                    ('is_swimmer', '=', True),
+                    ('club_id', '!=', False)  # ✅ Solo con club
+                ], limit=12)
+                
+                if swimmers:
+                    selected = random.sample(list(swimmers), min(6, len(swimmers)))
+                    for swimmer in selected:
+                        self.env['natacion.result'].create({
+                            'swimmer_id': swimmer.id,
+                            'series_id': series.id,
+                            'time': random.randint(2500, 4500),  # 25-45s realista
+                        })
+                        all_swimmers |= swimmer
+        
         self.swimmer_ids = all_swimmers
-       
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': '✅ ¡Campeonato generado!',
-                'message': f'{len(created_sessions)} sesiones, {len(all_swimmers)} nadadores',
+                'title': '✅ Campeonato generado',
+                'message': f'{len(created_sessions)} sesiones con tabla',
                 'type': 'success',
-                'sticky': False,
             }
         }
+
+    
+    @api.depends('session_ids.event_ids.series_ids.result_ids')
+    def _compute_general_classification(self):
+        for champ in self:
+            results = self.env['natacion.result'].search([
+                ('series_id.event_id.session_id.championship_id', '=', champ.id),
+                ('rank', '>', 0)
+            ]).sorted('time')   
+        
+        html = """
+            <table style='width:100%; border-collapse:collapse; font-family:Arial;'>
+                <thead>
+                    <tr style='background:#2E86AB; color:white;'>
+                        <th style='padding:12px; text-align:left;'>Nadador</th>
+                        <th style='padding:12px; text-align:center;'>Tiempo</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for idx, result in enumerate(results[:20], 1):
+           
+            time_str = f"{result.time/100:.2f}s"
+            html += f"""
+                <tr style='border-bottom:1px solid #ddd;'>
+                    <td style='padding:12px;'>{result.swimmer_id.name}</td>
+                    <td style='padding:12px; text-align:center; font-weight:bold; color:#2E86AB;'>{time_str}</td>
+                </tr>
+            """
+        
+        html += "</tbody></table>"
+        champ.general_classification = html if results else "<p>No hay resultados</p>"
+
 
 
 
@@ -491,15 +491,11 @@ class Session(models.Model):
                 raise UserError("Ya existe otra sesión en ese mismo día y hora.")
 
 
-    @api.depends('event_ids.swimmer_ids')
+    @api.depends('event_ids.series_ids')
     def _compute_duration(self):
         for s in self:
-            total = 0
-            for event in s.event_ids:
-                swimmers = len(event.swimmer_ids)
-                series = (swimmers + 7) // 8
-                total += series * 10
-            s.duration_minutes = total
+            s.duration_minutes = len(s.event_ids.mapped('series_ids')) * 10
+
 
 
 class Session_wizard(models.TransientModel):

@@ -78,6 +78,8 @@
                             <field name="name" />
                             <field name="start_date" />
                             <field name="end_date" />
+                            
+
                         </group>
 
 
@@ -94,6 +96,9 @@
                             </page>
                             <page string="Sesiones">
                                 <field name="session_ids" />
+                            </page>
+                            <page string="Tabla">
+                                <field name="general_classification" nolabel="1" readonly="1"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -117,14 +122,11 @@
             </field>
         </record>
 
-
         <!-- Acción principal (sin cambios) -->
         <record id="natacion.championship_action" model="ir.actions.act_window">
             <field name="name">Campeonatos</field>
             <field name="res_model">natacion.championship</field>
             <field name="view_mode">list,form,calendar</field>
         </record>
-
-
     </data>
 </odoo>
