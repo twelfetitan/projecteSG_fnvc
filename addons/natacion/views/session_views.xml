@@ -53,6 +53,13 @@
             <field name="model">natacion.session</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="%(natacion.action_report_session_tickets)d"
+                        string="Generar Entradas (50)" 
+                        type="action" 
+                        class="btn-success oe_highlight"
+                        icon="fa-ticket"/>
+                    </header>
                     <sheet>
                         <group>
                             <field name="name" />

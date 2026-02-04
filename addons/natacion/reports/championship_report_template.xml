@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Template principal del reporte -->
+    <template id="report_championship_results">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="championship">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        
+                        <!-- Encabezado del campeonato -->
+                        <div class="row mt-4 mb-4">
+                            <div class="col-12 text-center">
+                                <h1 class="text-primary">
+                                    <strong t-field="championship.name"/>
+                                </h1>
+                                <p class="text-muted">
+                                    <span>Fecha de inicio: </span>
+                                    <strong t-field="championship.start_date"/>
+                                    <t t-if="championship.end_date">
+                                        <span> - Fecha de fin: </span>
+                                        <strong t-field="championship.end_date"/>
+                                    </t>
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr class="mb-4"/>
+
+                        <!-- Información general -->
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <h4>Clubs Participantes</h4>
+                                <ul>
+                                    <t t-foreach="championship.club_ids" t-as="club">
+                                        <li>
+                                            <strong t-field="club.name"/>
+                                            <span class="text-muted">
+                                                (<t t-esc="club.town"/>)
+                                            </span>
+                                            - <span class="badge badge-primary">
+                                                <t t-esc="club.points"/> puntos
+                                            </span>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                            <div class="col-6">
+                                <h4>Estadísticas</h4>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Total Sesiones:</strong></td>
+                                        <td><t t-esc="len(championship.session_ids)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Nadadores:</strong></td>
+                                        <td><t t-esc="len(championship.swimmer_ids)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Clubs:</strong></td>
+                                        <td><t t-esc="len(championship.club_ids)"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Ranking de clubs -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h3 class="text-center mb-3">🏆 Ranking de Clubs</h3>
+                                <table class="table table-striped table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th class="text-center">Posición</th>
+                                            <th>Club</th>
+                                            <th>Ciudad</th>
+                                            <th class="text-center">Puntos</th>
+                                            <th class="text-center">Nadadores</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="sorted_clubs" t-value="championship.club_ids.sorted(key=lambda c: c.points, reverse=True)"/>
+                                        <t t-foreach="sorted_clubs" t-as="club">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <strong>
+                                                        <t t-if="club_index == 0">🥇</t>
+                                                        <t t-elif="club_index == 1">🥈</t>
+                                                        <t t-elif="club_index == 2">🥉</t>
+                                                        <t t-else="">
+                                                            <t t-esc="club_index + 1"/>
+                                                        </t>
+                                                    </strong>
+                                                </td>
+                                                <td><strong t-field="club.name"/></td>
+                                                <td><span t-field="club.town"/></td>
+                                                <td class="text-center">
+                                                    <span class="badge badge-success">
+                                                        <t t-esc="club.points"/>
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-esc="len(club.member_ids.filtered(lambda s: s.id in championship.swimmer_ids.ids))"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Nueva página para resultados detallados -->
+                        <p style="page-break-before: always;"/>
+
+                        <!-- Resultados por sesión -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 class="text-center mb-4">📋 Resultados Detallados por Sesión</h2>
+                                
+                                <t t-foreach="championship.session_ids.sorted(key=lambda s: s.date)" t-as="session">
+                                    
+                                    <!-- Encabezado de sesión -->
+                                    <div class="mb-3 mt-4">
+                                        <h3 class="bg-primary text-white p-2">
+                                            <i class="fa fa-calendar"/> 
+                                            <t t-esc="session.name"/>
+                                            <small class="float-right">
+                                                <t t-esc="session.date.strftime('%d/%m/%Y %H:%M')"/>
+                                            </small>
+                                        </h3>
+                                        <p class="text-muted">
+                                            Duración estimada: <strong><t t-esc="session.duration_minutes"/> minutos</strong>
+                                        </p>
+                                    </div>
+
+                                    <!-- Eventos de la sesión -->
+                                    <t t-foreach="session.event_ids" t-as="event">
+                                        
+                                        <div class="mb-4 border p-3">
+                                            <h4 class="text-info">
+                                                🏊 <t t-esc="event.name"/>
+                                                <t t-if="event.category_id">
+                                                    <span class="badge badge-secondary">
+                                                        <t t-esc="event.category_id.name"/>
+                                                    </span>
+                                                </t>
+                                            </h4>
+
+                                            <!-- Podio del evento -->
+                                            <t t-if="event.winner_1_id or event.winner_2_id or event.winner_3_id">
+                                                <div class="row mb-3">
+                                                    <div class="col-12">
+                                                        <h5>🏆 Podio</h5>
+                                                        <table class="table table-sm table-bordered">
+                                                            <thead>
+                                                                <tr class="table-warning">
+                                                                    <th width="10%">Posición</th>
+                                                                    <th width="40%">Nadador</th>
+                                                                    <th width="30%">Club</th>
+                                                                    <th width="20%">Puntos</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <t t-if="event.winner_1_id">
+                                                                    <tr class="table-success">
+                                                                        <td class="text-center"><strong>🥇 1º</strong></td>
+                                                                        <td><strong t-field="event.winner_1_id.name"/></td>
+                                                                        <td><span t-field="event.winner_1_id.club_id.name"/></td>
+                                                                        <td class="text-center"><span class="badge badge-warning">7 pts</span></td>
+                                                                    </tr>
+                                                                </t>
+                                                                <t t-if="event.winner_2_id">
+                                                                    <tr class="table-info">
+                                                                        <td class="text-center"><strong>🥈 2º</strong></td>
+                                                                        <td><strong t-field="event.winner_2_id.name"/></td>
+                                                                        <td><span t-field="event.winner_2_id.club_id.name"/></td>
+                                                                        <td class="text-center"><span class="badge badge-warning">5 pts</span></td>
+                                                                    </tr>
+                                                                </t>
+                                                                <t t-if="event.winner_3_id">
+                                                                    <tr class="table-warning">
+                                                                        <td class="text-center"><strong>🥉 3º</strong></td>
+                                                                        <td><strong t-field="event.winner_3_id.name"/></td>
+                                                                        <td><span t-field="event.winner_3_id.club_id.name"/></td>
+                                                                        <td class="text-center"><span class="badge badge-warning">3 pts</span></td>
+                                                                    </tr>
+                                                                </t>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </t>
+
+                                            <!-- Series del evento -->
+                                            <t t-foreach="event.series_ids" t-as="series">
+                                                <div class="ml-3 mb-3">
+                                                    <h6 class="text-secondary">
+                                                        📊 <t t-esc="series.name"/>
+                                                        <t t-if="series.winner_id">
+                                                            - Ganador: <strong t-field="series.winner_id.name"/>
+                                                        </t>
+                                                    </h6>
+                                                    
+                                                    <!-- Resultados de la serie -->
+                                                    <t t-if="series.result_ids">
+                                                        <table class="table table-sm table-hover">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th width="10%">Rank</th>
+                                                                    <th width="40%">Nadador</th>
+                                                                    <th width="30%">Club</th>
+                                                                    <th width="20%" class="text-right">Tiempo (s)</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <t t-foreach="series.result_ids.sorted(key=lambda r: r.rank if r.rank else 999)" t-as="result">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <t t-if="result.rank">
+                                                                                <span class="badge badge-secondary">
+                                                                                    <t t-esc="result.rank"/>
+                                                                                </span>
+                                                                            </t>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span t-field="result.swimmer_id.name"/>
+                                                                            <t t-if="result.swimmer_id.age">
+                                                                                <small class="text-muted">
+                                                                                    (<t t-esc="result.swimmer_id.age"/> años)
+                                                                                </small>
+                                                                            </t>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span t-field="result.swimmer_id.club_id.name"/>
+                                                                        </td>
+                                                                        <td class="text-right">
+                                                                            <strong>
+                                                                                <t t-esc="result.time"/>s
+                                                                            </strong>
+                                                                        </td>
+                                                                    </tr>
+                                                                </t>
+                                                            </tbody>
+                                                        </table>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                        </div>
+
+                                        <!-- Salto de página después de cada evento (opcional) -->
+                                        <!-- <p style="page-break-after: always;" t-if="not event_last"/> -->
+                                        
+                                    </t>
+
+                                    <!-- Salto de página entre sesiones -->
+                                    <p style="page-break-after: always;" t-if="not session_last"/>
+                                    
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Pie de página con estadísticas finales -->
+                        <div class="row mt-5">
+                            <div class="col-12 text-center text-muted">
+                                <hr/>
+                                <p>
+                                    <small>
+                                        Reporte generado el <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y a las %H:%M')"/>
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Estilos CSS personalizados -->
+
+    
+
+</odoo>

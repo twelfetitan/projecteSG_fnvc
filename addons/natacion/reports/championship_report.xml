@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Paper Format para el reporte -->
+    <record id="paperformat_championship_report" model="report.paperformat">
+        <field name="name">Championship Report Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Acción del reporte -->
+    <record id="action_report_championship_results" model="ir.actions.report">
+        <field name="name">Championship Results Report</field>
+        <field name="model">natacion.championship</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">natacion.report_championship_results</field>
+        <field name="report_file">natacion.report_championship_results</field>
+        <field name="print_report_name">'Resultados - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_natacion_championship"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_championship_report"/>
+    </record>
+
+</odoo>

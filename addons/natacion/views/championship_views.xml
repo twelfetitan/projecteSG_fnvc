@@ -68,6 +68,12 @@
                             class="btn-success oe_highlight"
                             invisible="session_ids" />
 
+                            
+                        <button name="%(natacion.action_report_championship_results)d"
+                        string="Descargar Resultados PDF"
+                        type="action"
+                        class="btn-success oe_highlight"
+                        icon="fa-file-pdf-o"/>
 
                        
                     </header>
