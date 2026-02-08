@@ -276,7 +276,6 @@ class Championship(models.Model):
     _name = 'natacion.championship'
     _description = 'campeonato'
 
-
     name = fields.Char()
     club_ids = fields.Many2many('natacion.club')
     swimmer_ids = fields.Many2many('res.partner')
@@ -284,6 +283,76 @@ class Championship(models.Model):
     start_date = fields.Date(required=True)
     end_date = fields.Date()
 
+    classification_html = fields.Html(compute='_compute_classification_html', store=False)
+
+    @api.depends('session_ids', 'swimmer_ids')
+    def _compute_classification_html(self):
+        for rec in self:
+            if not rec.session_ids:
+                rec.classification_html = '<p class="alert alert-info mt-3">Sin sesiones registradas.</p>'
+                continue
+
+            results = self.env['natacion.result'].search([
+                ('series_id.event_id.session_id.championship_id', '=', rec.id)
+            ])
+
+            if not results:
+                rec.classification_html = '<p class="alert alert-warning mt-3">Sin resultados. Genera con "Campeonato Aleatorio".</p>'
+                continue
+
+            # Mejor tiempo por nadador (min)
+            best_times = {}
+            for r in results:
+                tid = r.swimmer_id.id
+                t = r.time / 100.0  # Centésimas → segs (27.03s)
+                if tid not in best_times or t < best_times[tid]['time']:
+                    best_times[tid] = {
+                        'swimmer': r.swimmer_id,
+                        'club': r.swimmer_id.club_id.name or '',
+                        'time': t
+                    }
+
+            sorted_data = sorted(best_times.values(), key=lambda x: x['time'])
+
+            tbody = ''
+            for pos, data in enumerate(sorted_data, 1):
+                row_class = ''
+                if pos == 1:
+                    row_class = 'table-success font-weight-bold'
+                elif pos == 2:
+                    row_class = 'table-warning text-dark'
+                elif pos == 3:
+                    row_class = 'table-danger bg-light'
+                tbody += '''
+                <tr class="{}">
+                    <td width="50"><strong>{}º</strong></td>
+                    <td>{}</td>
+                    <td>{}</td>
+                </tr>'''.format(row_class, pos, data['swimmer'].name.upper(), data['club'])
+
+            # Resumen como imagen
+            start_fmt = rec.start_date.strftime('%d/%m/%Y') if rec.start_date else 'N/A'
+            end_fmt = rec.end_date.strftime('%d/%m/%Y') if rec.end_date else 'N/A'
+            count = len(rec.swimmer_ids)
+
+            rec.classification_html = '''
+            <div class="row mb-3 p-2 bg-light rounded">
+                <div class="col-4"><strong>Fecha Inicio:</strong> {}</div>
+                <div class="col-4"><strong>Fecha Fin:</strong> {}</div>
+                <div class="col-4"><strong>Nadadores:</strong> <span class="badge badge-primary">{}</span></div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Pos.</th>
+                            <th>Nadador</th>
+                            <th>Club</th>
+                        </tr>
+                    </thead>
+                    <tbody>{}</tbody>
+                </table>
+            </div>'''.format(start_fmt, end_fmt, count, tbody)
 
     def action_open_swimmer_wizard(self):
         self.ensure_one()
@@ -299,38 +368,34 @@ class Championship(models.Model):
             },
         }
 
-
     def action_generate_random(self):
         """Genera campeonato completo con datos aleatorios reales"""
         self.ensure_one()
-       
+        
         from datetime import datetime, timedelta
         import random
 
-
-       
         now = datetime.now()
         start_dt = datetime(
             year=now.year,
             month=now.month,
             day=now.day,
         ) + timedelta(days=random.randint(7, 30))
-       
+        
         created_sessions = self.env['natacion.session']
         for i in range(random.randint(3, 5)):
             session_dt = start_dt + timedelta(
                 hours=random.randint(9, 20),
                 minutes=[0, 10, 20, 30][i % 4],
             ) + timedelta(days=i)
-           
+            
             session = self.env['natacion.session'].create({
                 'name': f'Sesión {i+1}',
                 'date': session_dt,
                 'championship_id': self.id
             })
             created_sessions |= session
-       
-       
+        
         all_swimmers = self.env['res.partner']
         for session in created_sessions:
             for j in range(random.randint(4, 6)):
@@ -338,35 +403,35 @@ class Championship(models.Model):
                     'name': f'{random.choice(["50m", "100m", "200m"])} {random.choice(["Libre", "Espalda", "Pecho", "Mariposa"])}',
                     'session_id': session.id,
                 })
-               
+                
                 for k in range(random.randint(2, 3)):
                     series = self.env['natacion.series'].create({
                         'name': f'Serie {k+1}',
                         'event_id': event.id
                     })
-                   
+                    
                     swimmers = self.env['res.partner'].search([
                         ('is_swimmer', '=', True),
                         ('quota_valid', '=', True)
                     ], limit=20)
-                   
+                    
                     if swimmers:
                         selected_swimmers = random.sample(
                             list(swimmers),
                             min(8, len(swimmers))
                         )
-                       
+                        
                         for idx, swimmer in enumerate(selected_swimmers):
                             self.env['natacion.result'].create({
                                 'swimmer_id': swimmer.id,
                                 'series_id': series.id,
-                                'time': random.randint(25, 120),
+                                'time': random.randint(2500, 4500),  # Fix: 25.00-45.00s realista
                                 'rank': idx + 1
                             })
                             all_swimmers |= swimmer
-       
+        
         self.swimmer_ids = all_swimmers
-       
+        
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -377,6 +442,72 @@ class Championship(models.Model):
                 'sticky': False,
             }
         }
+
+
+class Championship_swimmers_wizard(models.TransientModel):
+    _name = 'natacion.championship.swimmers.wizard'
+    _description = 'Championship Swimmers Wizard'
+
+    championship_id = fields.Many2one(
+        'natacion.championship',
+        required=True,
+        default=lambda self: self.env.context.get('active_id'),
+    )
+
+    swimmer_ids = fields.Many2many(
+        'res.partner',
+        string='Nadadores (Clubs Inscritos)',
+        relation='natacion_championship_swimmer_wizard_rel',
+        column1='wizard_id',
+        column2='partner_id',
+        domain="[]",  # ← Domain dinámico abajo
+    )
+
+    swimmer_quota_valid = fields.Many2many(
+        'res.partner',
+        compute='_compute_quota_status',
+        string='Nadadores con Cuota'
+    )
+
+    @api.depends('championship_id')
+    def _compute_swimmer_domain(self):
+        """DOMAIN dinámico: FILTRA lista sin poblar"""
+        for wizard in self:
+            if wizard.championship_id.club_ids:
+                enrolled_clubs = wizard.championship_id.club_ids.ids
+                domain = [
+                    ('is_swimmer', '=', True),
+                    ('club_id', 'in', enrolled_clubs),  # ← Solo clubs inscritos
+                    ('quota_valid', '=', True)  # ← Cuota OK
+                ]
+                return {'domain': {'swimmer_ids': domain}}  # ← SOLO FILTRA, no pobla
+            return {'domain': {'swimmer_ids': [('id', '=', False)]}}  # Vacío
+
+    @api.onchange('championship_id')
+    def _onchange_championship(self):
+        return self._compute_swimmer_domain()  # Trigger domain
+
+    @api.depends('swimmer_ids')
+    def _compute_quota_status(self):
+        for record in self:
+            record.swimmer_quota_valid = record.swimmer_ids.filtered('quota_valid')
+
+    def action_confirm(self):
+        if not self.swimmer_ids:
+            raise UserError("¡Selecciona nadadores!")
+        
+        invalid_clubs = self.swimmer_ids.filtered(
+            lambda s: s.club_id and s.club_id not in self.championship_id.club_ids
+        )
+        if invalid_clubs:
+            raise UserError(f"Clubs no inscritos: {', '.join(invalid_clubs.mapped('club_id.name'))}")
+        
+        invalid_quota = self.swimmer_ids.filtered(lambda s: not s.quota_valid)
+        if invalid_quota:
+            raise UserError(f"Sin cuota: {', '.join(invalid_quota.mapped('name'))}")
+        
+        self.championship_id.swimmer_ids |= self.swimmer_ids
+        return {'type': 'ir.actions.act_window_close'}
 
 
 

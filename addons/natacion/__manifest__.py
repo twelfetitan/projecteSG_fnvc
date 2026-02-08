@@ -39,6 +39,7 @@ Long description of module's purpose
         'reports/session_tickets.xml',
         'reports/session_tickets_template.xml',
         'views/session_views.xml',
+        
         'demo/clubs.xml',
         'demo/category.xml',
         'demo/swimmers.xml',

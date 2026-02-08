@@ -68,14 +68,14 @@
                             class="btn-success oe_highlight"
                             invisible="session_ids" />
 
-                            
-                        <button name="%(natacion.action_report_championship_results)d"
-                        string="Descargar Resultados PDF"
-                        type="action"
-                        class="btn-success oe_highlight"
-                        icon="fa-file-pdf-o"/>
 
-                       
+                        <button name="%(natacion.action_report_championship_results)d"
+                            string="Descargar Resultados PDF"
+                            type="action"
+                            class="btn-success oe_highlight"
+                            icon="fa-file-pdf-o" />
+
+
                     </header>
 
 
@@ -101,12 +101,18 @@
                             <page string="Sesiones">
                                 <field name="session_ids" />
                             </page>
+                            <page string="Clasificación">
+                                <group>
+                                    <field name="classification_html" nolabel="1" readonly="1"
+                                        sanitize="False" />
+                                </group>
+
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-
 
 
         <!-- Calendar (sin cambios) -->
