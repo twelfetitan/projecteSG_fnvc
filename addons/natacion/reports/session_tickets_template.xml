@@ -2,115 +2,39 @@
 <odoo>
     <template id="report_session_tickets_template">
         <t t-call="web.html_container">
-            <t t-set="company" t-value="user.company_id"/>
+            <t t-set="company" t-value="res_company"/>
             <t t-foreach="docs" t-as="o">
                 <t t-set="qty" t-value="o.tickets_qty or 50"/>
                 <t t-foreach="range(qty)" t-as="n">
-                    <div class="page" style="
-                        page-break-after: always !important;
-                        -webkit-page-break-after: always !important;
-                        page-break-inside: avoid !important;
-                        -webkit-page-break-inside: avoid !important;
-                        height: 50mm !important;
-                        width: 200mm !important;
-                        margin: 0 !important;
-                        padding: 0 !important;
-                        position: relative !important;
-                        background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%) !important;
-                        border-radius: 8mm !important;
-                        box-shadow: 0 4mm 8mm rgba(0,0,0,0.3) !important;
-                    ">
-                        <!-- Logo federación/empresa superior izquierda -->
-                        <img t-if="company.logo"
-                             t-att-src="'data:image/png;base64,' + (company.logo.decode('ascii') if isinstance(company.logo, bytes) else company.logo)"
-                             style="
-                                position: absolute !important;
-                                top: 2mm !important;
-                                left: 3mm !important;
-                                height: 12mm !important;
-                                width: auto !important;
-                                z-index: 10 !important;
-                             "/>
-
-                        <!-- Info sesión superior centro -->
-                        <div style="
-                            position: absolute !important;
-                            top: 2mm !important;
-                            left: 20mm !important;
-                            right: 30mm !important;
-                            text-align: center !important;
-                            font-family: 'Arial Black', Arial, sans-serif !important;
-                            font-size: 8pt !important;
-                            color: #000 !important;
-                            font-weight: bold !important;
-                            line-height: 1.1 !important;
-                        ">
-                            <div t-esc="o.championship_id.name or 'Campeonato de Natación'"/>
-                            <div t-esc="o.name"/>
-                            <div t-esc="o.date.strftime('%d/%m/%Y %H:%M')"/>
+                    <div class="page" style="page-break-after: always; height: 50mm; width: 200mm; margin: 0; padding: 0; position: relative; background: #f5f5f5; border: 2px solid #333;">
+                        <!-- Logo fallback -->
+                        <div style="position: absolute; top: 1mm; left: 2mm; font-family: Arial; font-weight: bold; color: #0066cc; font-size: 11pt;">
+                            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 13mm;"/>
+                            <t t-else=""><span>FEDERACION<br/>NATACION</span></t>
                         </div>
 
-                        <!-- Número de entrada grande centro -->
-                        <div style="
-                            position: absolute !important;
-                            top: 18mm !important;
-                            left: 0 !important;
-                            right: 0 !important;
-                            bottom: 15mm !important;
-                            display: flex !important;
-                            align-items: center !important;
-                            justify-content: center !important;
-                            font-family: 'Arial Black', Arial, sans-serif !important;
-                            font-size: 36pt !important;
-                            font-weight: 900 !important;
-                            color: #FFF !important;
-                            text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
-                            text-align: center !important;
-                            letter-spacing: 2px !important;
-                        ">
-                            <span t-esc="str(n+1).zfill(3)"/>
+                        <!-- Título/fecha -->
+                        <div style="position: absolute; top: 1mm; left: 22mm; right: 28mm; text-align: center; font-family: Arial; font-size: 8pt; font-weight: bold; line-height: 1.2; color: #000;">
+                            <t t-out="o.championship_id.name or 'CAMPEONATO NATACION'"/>
+                            <br t-if="o.name"/><t t-out="o.name or ''"/>
+                            <br/><t t-out="o.date.strftime('%d/%m/%Y %H:%M') if o.date else 'FECHA SESION'"/>
                         </div>
 
-                        <!-- Texto inferior -->
-                        <div style="
-                            position: absolute !important;
-                            bottom: 8mm !important;
-                            left: 3mm !important;
-                            font-family: Arial, sans-serif !important;
-                            font-size: 7pt !important;
-                            color: #000 !important;
-                            font-weight: bold !important;
-                        ">
-                            Entrada Gratuita • Válida solo para esta sesión
+                        <!-- Número -->
+                        <div style="position: absolute; top: 17mm; left: 20mm; right: 20mm; bottom: 16mm; display: flex; align-items: center; justify-content: center; font-family: Arial; font-size: 32pt; font-weight: bold; color: #0066cc;">
+                            <t t-out="str(n+1).zfill(3)"/>
                         </div>
 
-                        <!-- QR inferior derecha -->
-                        <div style="
-                            position: absolute !important;
-                            bottom: 2mm !important;
-                            right: 3mm !important;
-                        ">
-                            <img t-att-src="'/report/barcode/?type=QR&amp;value=session_' + str(o.id) + '_ticket_' + str(n+1) + '&amp;width=256&amp;height=256&amp;humanreadable=0'"
-                                 style="
-                                    width: 22mm !important;
-                                    height: 22mm !important;
-                                    border: 2px solid #000 !important;
-                                    border-radius: 3mm !important;
-                                 "/>
+                        <!-- Texto -->
+                        <div style="position: absolute; bottom: 9mm; left: 3mm; right: 30mm; font-family: Arial; font-size: 7.5pt; color: #000; font-weight: bold; text-align: center;">
+                            <t t-out="'ENTRADA GRATUITA - VALIDA SOLO ESTA SESION'"/>
                         </div>
 
-                        <!-- Borde exterior -->
-                        <div style="
-                            position: absolute !important;
-                            top: 1mm !important;
-                            left: 1mm !important;
-                            right: 1mm !important;
-                            bottom: 1mm !important;
-                            border: 3px solid #000 !important;
-                            border-radius: 6mm !important;
-                            box-sizing: border-box !important;
-                            pointer-events: none !important;
-                        "></div>
+                        <!-- QR -->
+                        <div style="position: absolute; bottom: 2mm; right: 2mm; width: 25mm; height: 25mm; border: 2px solid #000; background: white;">
+                            <img t-att-src="'/report/barcode/?type=QR&amp;value=session_%s_ticket_%s' % (o.id, n+1)" style="width: 100%; height: 100%;"/>
+                            <div t-if="False" style="font-size: 4pt; text-align: center; color: #999;">S<span t-out="o.id"/><br/>T<span t-out="n+1"/></div>
+                        </div>
                     </div>
                 </t>
             </t>

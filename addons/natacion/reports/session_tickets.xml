@@ -13,7 +13,7 @@
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
         <field name="header_spacing">0</field>
-        <field name="dpi">96</field>
+        <field name="dpi">127</field>           <!-- Mejor para QR e imágenes -->
     </record>
 
     <record id="action_report_session_tickets" model="ir.actions.report">
