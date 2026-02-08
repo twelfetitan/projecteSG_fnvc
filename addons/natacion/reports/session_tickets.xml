@@ -4,8 +4,8 @@
         <field name="name">Ticket 20x5cm</field>
         <field name="default" eval="False"/>
         <field name="format">custom</field>
-        <field name="page_height">200</field>   <!-- 20cm (ancho real en horizontal) -->
-        <field name="page_width">50</field>     <!-- 5cm (alto real en horizontal) -->
+        <field name="page_height">200</field>   <!-- 20cm antes de rotar -->
+        <field name="page_width">50</field>     <!-- 5cm antes de rotar -->
         <field name="orientation">Landscape</field>
         <field name="margin_top">0</field>
         <field name="margin_bottom">0</field>
@@ -17,7 +17,7 @@
     </record>
 
     <record id="action_report_session_tickets" model="ir.actions.report">
-        <field name="name">Tickets Sesión</field>
+        <field name="name">Entradas Sesión</field>
         <field name="model">natacion.session</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">natacion.report_session_tickets_template</field>

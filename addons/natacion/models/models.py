@@ -472,6 +472,12 @@ class Session(models.Model):
         store=True,
     )
 
+    tickets_qty = fields.Integer(
+    string="Número de Entradas",
+    default=50,
+    help="Cantidad de entradas a generar en el PDF"
+)
+
 
     @api.constrains('date')
     def _check_session_after_championship(self):
@@ -523,6 +529,7 @@ class Session_wizard(models.TransientModel):
         compute='_compute_swimmers',
         readonly=True
     )
+
 
 
     @api.depends('session_id.championship_id.swimmer_ids')
