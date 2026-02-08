@@ -27,3 +27,7 @@ Módulo Odoo 18 para gestionar clubes de natación, nadadores, cuotas, campeonat
 <p align="center">
   <img src="logo.png" alt="Logo Natación" width="250">
 </p>
+
+
+ℹ️ **Nota**  
+Este repositorio forma parte de un proyecto académico del ciclo de DAM y se ha desarrollado con fines de aprendizaje y práctica, no comerciales.
