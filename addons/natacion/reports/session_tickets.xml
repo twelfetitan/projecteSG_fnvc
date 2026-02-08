@@ -1,33 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <record id="paperformat_session_ticket" model="report.paperformat">
+        <field name="name">Ticket 20x5cm</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">200</field>   <!-- 20cm (ancho real en horizontal) -->
+        <field name="page_width">50</field>     <!-- 5cm (alto real en horizontal) -->
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
 
-        <!-- 📏 PAPEL 20x5cm -->
-       <record id="paperformat_tickets_20x5" model="report.paperformat">
-    <field name="name">🎫 Entradas 20x5cm</field>
-    <field name="format">custom</field>
-    <field name="page_width">200</field>
-    <field name="page_height">50</field>
-    <field name="orientation">Portrait</field>
-    <field name="margin_top">0</field>
-    <field name="margin_bottom">0</field>
-    <field name="margin_left">0</field>
-    <field name="margin_right">0</field>
-</record>
-
-
-
-        <!-- 📋 Acción Reporte -->
-        <record id="action_report_session_tickets" model="ir.actions.report">
-            <field name="name">🎫 Entradas Sesión</field>
-            <field name="model">natacion.session</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">natacion.session_tickets</field>
-            <field name="report_file">natacion.session_tickets</field>
-            <field name="paperformat_id" ref="paperformat_tickets_20x5" />
-            <field name="binding_model_id" ref="model_natacion_session" />
-            <field name="binding_type">report</field>
-        </record>
-
-    </data>
+    <record id="action_report_session_tickets" model="ir.actions.report">
+        <field name="name">Tickets Sesión</field>
+        <field name="model">natacion.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">natacion.report_session_tickets_template</field>
+        <field name="binding_model_id" ref="model_natacion_session"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_session_ticket"/>
+    </record>
 </odoo>

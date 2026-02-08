@@ -1,59 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="session_tickets">
-        <t t-foreach="docs" t-as="session">
-            <t t-foreach="range(1, 51)" t-as="num">
-                <div style="width:200mm; height:50mm; padding:0; margin:0; page-break-after:always; 
-                            background-color:#1E3A8A; 
-                            border:3px solid white; 
-                            font-family:Arial Black, Arial, sans-serif;
-                            font-weight:bold;
-                            color:white;
-                            position:relative;">
-                    
-                    <!-- LOGO IZQUIERDA GRANDE NEGRITA -->
-                    <div style="position:absolute; left:5mm; top:5mm; width:25mm; height:25mm; 
-                                background:white; color:#1E3A8A; 
-                                border:3px solid #60A5FA; border-radius:15mm;
-                                font-size:20px; line-height:25mm; text-align:center;">
-                        🏊
+    <template id="report_session_tickets_template">
+        <t t-call="web.basic_layout">
+            <t t-foreach="range(50)" t-as="n">
+                <div class="page">
+                    <div style="
+                        position: absolute;
+                        top: 2mm;
+                        left: 2mm;
+                        width: 196mm;
+                        height: 46mm;
+                        background: #27ae60;
+                        border: 4px solid #000;
+                        color: #fff;
+                        font-family: Arial Black, Arial, sans-serif;
+                        font-size: 32px;
+                        font-weight: bold;
+                        text-align: center;
+                        line-height: 46mm;
+                    ">
+                        <span t-esc="n+1"/>
                     </div>
-                    
-                    <!-- TITULO CENTRAL ENORME -->
-                    <div style="position:absolute; top:8mm; left:35mm; right:35mm; 
-                                text-align:center; font-size:16px; 
-                                border-bottom:2px solid white; padding-bottom:2mm; 
-                                letter-spacing:1px;">
-                        ENTRADA GRATUITA
-                    </div>
-                    
-                    <!-- INFO SESION -->
-                    <div style="position:absolute; top:28mm; left:35mm; font-size:11px; line-height:14px;">
-                        <div style="font-size:13px;"><t t-esc="session.name"/></div>
-                        <div><t t-esc="session.championship_id.name"/></div>
-                        <div><t t-esc="session.date.strftime('%d %B - %H:%M')"/> | <t t-esc="session.duration_minutes"/>'</div>
-                    </div>
-                    
-                    <!-- NUMERO DERECHA ENORME -->
-                    <div style="position:absolute; top:5mm; right:8mm; 
-                                font-size:28px; color:white;
-                                background:#60A5FA; 
-                                width:28mm; height:28mm; line-height:28mm; text-align:center;
-                                border:3px solid white; border-radius:15mm;">
-                        <t t-esc="str(num).zfill(3)"/>
-                    </div>
-                    
-                    <!-- QR DERECHA ABAJO -->
-                    <div style="position:absolute; top:28mm; right:5mm; 
-                                width:22mm; height:22mm; background:white; border:2px solid #60A5FA;">
-                        <img t-att-src="'/report/barcode/?type=QR&amp;value=SES'+str(session.id)+'-'+str(num)+'&amp;width=160&amp;height=160'"
-                             style="width:100%; height:100%;"/>
-                    </div>
-                    
-                    <!-- LINEA AZUL PISCINA -->
-                    <div style="position:absolute; top:22mm; left:0; right:0; 
-                                height:2mm; background:#60A5FA;"></div>
-                    
                 </div>
             </t>
         </t>
