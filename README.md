@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="logo.png" alt="Logo Natación" width="300">
-</p>
-
 [![Odoo](https://img.shields.io/badge/Odoo-18.0-brightgreen)](https://www.odoo.com)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org)
 [![Docker](https://img.shields.io/badge/Docker-Supported-brightgreen)](https://www.docker.com)
@@ -27,3 +23,7 @@ Módulo Odoo 18 para gestionar clubes de natación, nadadores, cuotas, campeonat
 - Paga cuotas.
 - Campeonato > 🪄 Generar Aleatorio.
 - ¡Tabla clasificación lista!
+
+<p align="center">
+  <img src="logo.png" alt="Logo Natación" width="250">
+</p>
