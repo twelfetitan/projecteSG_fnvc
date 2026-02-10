@@ -64,51 +64,6 @@
                             </div>
                         </div>
 
-                        <!-- Ranking de clubs -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <h3 class="text-center mb-3">🏆 Ranking de Clubs</h3>
-                                <table class="table table-striped table-bordered">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th class="text-center">Posición</th>
-                                            <th>Club</th>
-                                            <th>Ciudad</th>
-                                            <th class="text-center">Puntos</th>
-                                            <th class="text-center">Nadadores</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-set="sorted_clubs" t-value="championship.club_ids.sorted(key=lambda c: c.points, reverse=True)"/>
-                                        <t t-foreach="sorted_clubs" t-as="club">
-                                            <tr>
-                                                <td class="text-center">
-                                                    <strong>
-                                                        <t t-if="club_index == 0">🥇</t>
-                                                        <t t-elif="club_index == 1">🥈</t>
-                                                        <t t-elif="club_index == 2">🥉</t>
-                                                        <t t-else="">
-                                                            <t t-esc="club_index + 1"/>
-                                                        </t>
-                                                    </strong>
-                                                </td>
-                                                <td><strong t-field="club.name"/></td>
-                                                <td><span t-field="club.town"/></td>
-                                                <td class="text-center">
-                                                    <span class="badge badge-success">
-                                                        <t t-esc="club.points"/>
-                                                    </span>
-                                                </td>
-                                                <td class="text-center">
-                                                    <t t-esc="len(club.member_ids.filtered(lambda s: s.id in championship.swimmer_ids.ids))"/>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
                         <!-- Nueva página para resultados detallados -->
                         <p style="page-break-before: always;"/>
 
@@ -195,7 +150,7 @@
                                             <t t-foreach="event.series_ids" t-as="series">
                                                 <div class="ml-3 mb-3">
                                                     <h6 class="text-secondary">
-                                                        📊 <t t-esc="series.name"/>
+                                                         <t t-esc="series.name"/>
                                                         <t t-if="series.winner_id">
                                                             - Ganador: <strong t-field="series.winner_id.name"/>
                                                         </t>
@@ -247,9 +202,6 @@
                                             </t>
                                         </div>
 
-                                        <!-- Salto de página después de cada evento (opcional) -->
-                                        <!-- <p style="page-break-after: always;" t-if="not event_last"/> -->
-                                        
                                     </t>
 
                                     <!-- Salto de página entre sesiones -->
@@ -276,9 +228,5 @@
             </t>
         </t>
     </template>
-
-    <!-- Estilos CSS personalizados -->
-
-    
 
 </odoo>
