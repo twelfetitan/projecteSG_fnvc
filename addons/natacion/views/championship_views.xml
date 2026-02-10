@@ -53,6 +53,36 @@
             <field name="target">new</field>
         </record>
 
+        <record model="ir.ui.view" id="view_natacion_championship_json_wizard_form">
+            <field name="name">natacion.championship.json.wizard.form</field>
+            <field name="model">natacion.championship.json.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Contenido Campeonato JSON">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="championship_id" />
+                            </h1>
+                        </div>
+                        <field name="json_results"
+                            nolabel="1"
+                            readonly="1"
+                            height="700"
+                            widget="text" />
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_natacion_championship_json_wizard" model="ir.actions.act_window">
+            <field name="name">JSON Resultados</field>
+            <field name="res_model">natacion.championship.json.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_natacion_championship_json_wizard_form" />
+            <field name="target">new</field>
+        </record>
+
 
         <!-- Form Championship (botón incluido) -->
         <record model="ir.ui.view" id="natacion.championship_form_view">
@@ -74,6 +104,12 @@
                             type="action"
                             class="btn-success oe_highlight"
                             icon="fa-file-pdf-o" />
+
+                        <button name="%(action_natacion_championship_json_wizard)d"
+                            string="JSON Resultados"
+                            type="action"
+                            class="btn-info oe_highlight"
+                            icon="fa-code" />
 
 
                     </header>

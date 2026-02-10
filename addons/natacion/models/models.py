@@ -304,7 +304,7 @@ class Championship(models.Model):
             best_times = {}
             for r in results:
                 tid = r.swimmer_id.id
-                t = r.time / 100.0  # Centésimas → segs (27.03s)
+                t = r.time / 100.0
                 if tid not in best_times or t < best_times[tid]['time']:
                     best_times[tid] = {
                         'swimmer': r.swimmer_id,
@@ -330,7 +330,6 @@ class Championship(models.Model):
                     <td>{}</td>
                 </tr>'''.format(row_class, pos, data['swimmer'].name.upper(), data['club'])
 
-            # Resumen como imagen
             start_fmt = rec.start_date.strftime('%d/%m/%Y') if rec.start_date else 'N/A'
             end_fmt = rec.end_date.strftime('%d/%m/%Y') if rec.end_date else 'N/A'
             count = len(rec.swimmer_ids)
@@ -353,6 +352,81 @@ class Championship(models.Model):
                     <tbody>{}</tbody>
                 </table>
             </div>'''.format(start_fmt, end_fmt, count, tbody)
+
+    def _get_full_json(self):
+        """✅ FIXED: JSON completo del campeonato"""
+        import json
+        
+        # Si no hay sesiones, devuelve JSON vacío
+        if not self.session_ids:
+            return json.dumps({
+                "mensaje": "Sin sesiones ni resultados. Genera un campeonato aleatorio primero.",
+                "campeonato": {"nombre": self.name}
+            }, indent=2, ensure_ascii=False)
+
+        data = {
+            'campeonato': {
+                'nombre': self.name,
+                'fecha_inicio': str(self.start_date) if self.start_date else None,
+                'fecha_fin': str(self.end_date) if self.end_date else None,
+                'total_sesiones': len(self.session_ids),
+                'total_clubs': len(self.club_ids),
+                'total_nadadores': len(self.swimmer_ids)
+            },
+            'sesiones': [],
+            'clasificacion': []
+        }
+
+        # ✅ Sesiones → Eventos → Series → Resultados
+        for session in self.session_ids.sorted('date'):
+            session_data = {
+                'nombre': session.name,
+                'fecha': str(session.date),
+                'eventos': []
+            }
+            for event in session.event_ids:
+                event_data = {
+                    'nombre': event.name,
+                    'series': []
+                }
+                for series in event.series_ids:
+                    series_data = {
+                        'nombre': series.name,
+                        'resultados': []
+                    }
+                    for result in series.result_ids.sorted('rank'):
+                        if result.swimmer_id:  # ✅ Verificación
+                            result_data = {
+                                'nadador': result.swimmer_id.name,
+                                'club': result.swimmer_id.club_id.name or 'Sin club',
+                                'tiempo': f"{result.time//100}.{result.time%100:02d}s",
+                                'puesto': result.rank
+                            }
+                            series_data['resultados'].append(result_data)
+                    event_data['series'].append(series_data)
+                session_data['eventos'].append(event_data)
+            data['sesiones'].append(session_data)
+
+        # ✅ Clasificación FIXED - estructura plana
+        results = self.env['natacion.result'].search([
+            ('series_id.event_id.session_id.championship_id', '=', self.id),
+            ('swimmer_id', '!=', False)
+        ])
+        best_times = {}
+        for r in results:
+            tid = r.swimmer_id.id
+            t = r.time / 100.0
+            if tid not in best_times or t < best_times[tid]['time']:
+                best_times[tid] = {
+                    'nadador': r.swimmer_id.name,
+                    'club': r.swimmer_id.club_id.name or 'Sin club',
+                    'mejor_tiempo': f"{t:.2f}s",
+                    'time': t  # ✅ Añadido para comparación numérica
+                }
+        
+        data['clasificacion'] = sorted(best_times.values(), key=lambda x: x['time'])
+
+        return json.dumps(data, indent=2, ensure_ascii=False)
 
     def action_open_swimmer_wizard(self):
         self.ensure_one()
@@ -425,7 +499,7 @@ class Championship(models.Model):
                             self.env['natacion.result'].create({
                                 'swimmer_id': swimmer.id,
                                 'series_id': series.id,
-                                'time': random.randint(2500, 4500),  # Fix: 25.00-45.00s realista
+                                'time': random.randint(2500, 4500),
                                 'rank': idx + 1
                             })
                             all_swimmers |= swimmer
@@ -444,6 +518,8 @@ class Championship(models.Model):
         }
 
 
+
+
 class Championship_swimmers_wizard(models.TransientModel):
     _name = 'natacion.championship.swimmers.wizard'
     _description = 'Championship Swimmers Wizard'
@@ -511,79 +587,31 @@ class Championship_swimmers_wizard(models.TransientModel):
 
 
 
-
-class Championship_swimmers_wizard(models.TransientModel):
-    _name = 'natacion.championship.swimmers.wizard'
-    _description = 'Championship Swimmers Wizard'
-
+class Championship_json_wizard(models.TransientModel):
+    _name = 'natacion.championship.json.wizard'
+    _description = 'JSON Resultados Campeonato'
 
     championship_id = fields.Many2one(
         'natacion.championship',
         required=True,
         default=lambda self: self.env.context.get('active_id'),
+        readonly=True
+    )
+    
+    json_results = fields.Text(
+        string="Contenido Campeonato JSON",
+        readonly=True,
+        sanitize=False
     )
 
-
-    swimmer_ids = fields.Many2many(
-        'res.partner',
-        string='Nadadores (Clubs Inscritos)',
-        relation='natacion_championship_swimmer_wizard_rel',
-        column1='wizard_id',
-        column2='partner_id',
-        domain="[]",  # ← Domain dinámico abajo
-    )
-
-
-    swimmer_quota_valid = fields.Many2many(
-        'res.partner',
-        compute='_compute_quota_status',
-        string='Nadadores con Cuota'
-    )
-
-
-    @api.depends('championship_id')
-    def _compute_swimmer_domain(self):
-        """DOMAIN dinámico: FILTRA lista sin poblar"""
-        for wizard in self:
-            if wizard.championship_id.club_ids:
-                enrolled_clubs = wizard.championship_id.club_ids.ids
-                domain = [
-                    ('is_swimmer', '=', True),
-                    ('club_id', 'in', enrolled_clubs),  # ← Solo clubs inscritos
-                    ('quota_valid', '=', True)  # ← Cuota OK
-                ]
-                return {'domain': {'swimmer_ids': domain}}  # ← SOLO FILTRA, no pobla
-            return {'domain': {'swimmer_ids': [('id', '=', False)]}}  # Vacío
-
-
-    @api.onchange('championship_id')
-    def _onchange_championship(self):
-        return self._compute_swimmer_domain()  # Trigger domain
-
-
-    @api.depends('swimmer_ids')
-    def _compute_quota_status(self):
-        for record in self:
-            record.swimmer_quota_valid = record.swimmer_ids.filtered('quota_valid')
-
-
-    def action_confirm(self):
-        if not self.swimmer_ids:
-            raise UserError("¡Selecciona nadadores!")
-       
-        invalid_clubs = self.swimmer_ids.filtered(
-            lambda s: s.club_id and s.club_id not in self.championship_id.club_ids
-        )
-        if invalid_clubs:
-            raise UserError(f"Clubs no inscritos: {', '.join(invalid_clubs.mapped('club_id.name'))}")
-       
-        invalid_quota = self.swimmer_ids.filtered(lambda s: not s.quota_valid)
-        if invalid_quota:
-            raise UserError(f"Sin cuota: {', '.join(invalid_quota.mapped('name'))}")
-       
-        self.championship_id.swimmer_ids |= self.swimmer_ids
-        return {'type': 'ir.actions.act_window_close'}
-
+    @api.model
+    def default_get(self, fields_list):
+        """Carga JSON automáticamente al abrir"""
+        res = super().default_get(fields_list)
+        if self.env.context.get('active_id'):
+            championship = self.env['natacion.championship'].browse(self.env.context['active_id'])
+            res['json_results'] = championship._get_full_json()
+        return res
 
 
 
