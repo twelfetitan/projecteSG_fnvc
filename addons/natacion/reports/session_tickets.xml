@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="paperformat_session_ticket" model="report.paperformat">
-        <field name="name">Ticket 20x5cm</field>
+        <field name="name">Ticket 40x100mm</field>
         <field name="default" eval="False"/>
         <field name="format">custom</field>
-        <field name="page_height">200</field>   <!-- 20cm antes de rotar -->
-        <field name="page_width">50</field>     <!-- 5cm antes de rotar -->
-        <field name="orientation">Landscape</field>
+        <field name="page_height">40</field>
+        <field name="page_width">100</field>
+        <field name="orientation">Portrait</field>
         <field name="margin_top">0</field>
         <field name="margin_bottom">0</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
         <field name="header_spacing">0</field>
-        <field name="dpi">127</field>           <!-- Mejor para QR e imágenes -->
+        <field name="dpi">127</field>
     </record>
 
     <record id="action_report_session_tickets" model="ir.actions.report">

@@ -2,39 +2,60 @@
 <odoo>
     <template id="report_session_tickets_template">
         <t t-call="web.html_container">
-            <t t-set="company" t-value="res_company"/>
+            <t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
             <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="res_company"/>
                 <t t-set="qty" t-value="o.tickets_qty or 50"/>
                 <t t-foreach="range(qty)" t-as="n">
-                    <div class="page" style="page-break-after: always; height: 50mm; width: 200mm; margin: 0; padding: 0; position: relative; background: #f5f5f5; border: 2px solid #333;">
-                        <!-- Logo fallback -->
-                        <div style="position: absolute; top: 1mm; left: 2mm; font-family: Arial; font-weight: bold; color: #0066cc; font-size: 11pt;">
-                            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 13mm;"/>
-                            <t t-else=""><span>FEDERACION<br/>NATACION</span></t>
-                        </div>
-
-                        <!-- Título/fecha -->
-                        <div style="position: absolute; top: 1mm; left: 22mm; right: 28mm; text-align: center; font-family: Arial; font-size: 8pt; font-weight: bold; line-height: 1.2; color: #000;">
-                            <t t-out="o.championship_id.name or 'CAMPEONATO NATACION'"/>
-                            <br t-if="o.name"/><t t-out="o.name or ''"/>
-                            <br/><t t-out="o.date.strftime('%d/%m/%Y %H:%M') if o.date else 'FECHA SESION'"/>
-                        </div>
-
-                        <!-- Número -->
-                        <div style="position: absolute; top: 17mm; left: 20mm; right: 20mm; bottom: 16mm; display: flex; align-items: center; justify-content: center; font-family: Arial; font-size: 32pt; font-weight: bold; color: #0066cc;">
-                            <t t-out="str(n+1).zfill(3)"/>
-                        </div>
-
-                        <!-- Texto -->
-                        <div style="position: absolute; bottom: 9mm; left: 3mm; right: 30mm; font-family: Arial; font-size: 7.5pt; color: #000; font-weight: bold; text-align: center;">
-                            <t t-out="'ENTRADA GRATUITA - VALIDA SOLO ESTA SESION'"/>
-                        </div>
-
-                        <!-- QR -->
-                        <div style="position: absolute; bottom: 2mm; right: 2mm; width: 25mm; height: 25mm; border: 2px solid #000; background: white;">
-                            <img t-att-src="'/report/barcode/?type=QR&amp;value=session_%s_ticket_%s' % (o.id, n+1)" style="width: 100%; height: 100%;"/>
-                            <div t-if="False" style="font-size: 4pt; text-align: center; color: #999;">S<span t-out="o.id"/><br/>T<span t-out="n+1"/></div>
-                        </div>
+                    <div class="page" style="height: 40mm; width: 100mm; margin: 0; padding: 3mm; font-family: 'Helvetica', 'Arial', sans-serif; background: #fff; page-break-after: always; border-bottom: 0.1mm dashed #ccc;">
+                        <table style="width: 100%; border-collapse: collapse; height: 34mm;">
+                            <!-- Header Row -->
+                            <tr>
+                                <td style="width: 30mm; vertical-align: middle; padding-bottom: 2mm; border-bottom: 1.5mm solid #0066cc;">
+                                    <img t-if="company.logo" t-attf-src="data:image/*;base64,{{company.logo}}" style="max-height: 12mm; max-width: 28mm;"/>
+                                </td>
+                                <td style="vertical-align: middle; text-align: right; padding-bottom: 2mm; border-bottom: 1.5mm solid #0066cc;">
+                                    <div style="font-size: 10pt; font-weight: bold; color: #000; text-transform: uppercase;">
+                                        <t t-out="company.name"/>
+                                    </div>
+                                    <div style="font-size: 8pt; color: #666;">
+                                        Federación de Natación
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Main Content Row -->
+                            <tr>
+                                <td style="padding-top: 3mm; vertical-align: top;">
+                                    <div style="font-size: 12pt; font-weight: bold; color: #0066cc;">
+                                        <t t-out="o.name or 'SESIÓN'"/>
+                                    </div>
+                                    <div style="font-size: 9pt; color: #333; margin-top: 1mm;">
+                                        <t t-out="o.date.strftime('%d/%m/%Y %H:%M') if o.date else ''"/>
+                                    </div>
+                                    <div style="margin-top: 4mm; border-top: 0.2mm solid #eee; padding-top: 2mm;">
+                                        <div style="font-size: 8pt; font-weight: bold; text-transform: uppercase; color: #444;">
+                                            ENTRADA DE ACCESO
+                                        </div>
+                                        <div style="font-size: 6pt; color: #999;">
+                                            Válida únicamente para la sesión y fecha indicada.
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding-top: 3mm; text-align: right; vertical-align: top;">
+                                    <div style="display: inline-block; text-align: center;">
+                                        <div style="font-size: 28pt; font-weight: 900; color: #0066cc; line-height: 1; margin-bottom: 2mm;">
+                                            <t t-out="str(n+1).zfill(3)"/>
+                                        </div>
+                                        <div style="padding: 1mm; border: 0.4mm solid #0066cc; border-radius: 2mm; background: #fff;">
+                                            <img t-att-src="base_url + '/report/barcode/QR/Session_' + str(o.id) + '_Ticket_' + str(n+1)" style="width: 18mm; height: 18mm; display: block;"/>
+                                        </div>
+                                        <div style="font-size: 5pt; color: #ccc; margin-top: 1mm; font-family: monospace;">
+                                            VERIF: ID-<t t-out="o.id"/>-T<t t-out="n+1"/>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </t>
             </t>
