@@ -2,7 +2,7 @@
 from odoo import models, fields, api
 from datetime import date, timedelta
 from odoo.exceptions import UserError
-import random
+import random, json
 
 
 
@@ -22,6 +22,22 @@ class Club(models.Model):
     ranking_icon = fields.Char(compute='_compute_ranking_icon', store=False)
     ranking_color = fields.Char(compute='_compute_ranking_color', store=False)
     ranking_ribbon = fields.Html(string="Ribbon", compute='_compute_ranking_ribbon', store=False)
+
+    club_results = fields.Char(
+        string="JSON CLUB",
+        compute="_compute_club",
+        readonly=True,
+        sanitize=False
+    )
+
+    @api.depends("name", "points")
+    def _compute_club(self):
+        for record in self:
+            record.club_results = json.dumps({
+                "club": record.name,
+                "points": record.points
+            })
+
 
 
     @api.model
@@ -165,6 +181,12 @@ class Swimmer(models.Model):
         string="Eventos",
         readonly=True,
     )
+    #id_display = fields.Char(
+    #    string="🆔 ID",
+    #    related='id', 
+    #    readonly=True,
+    #    store=True  # ← Lista visible
+    #)
     event_count = fields.Integer(string="Número de Eventos", compute="_compute_event_count", store=False)
     has_events = fields.Boolean(compute='_compute_has_events', store=False)
     image = fields.Image()
@@ -203,6 +225,11 @@ class Swimmer(models.Model):
         })
         self.end_quota = endDt
         return order.get_formview_action()
+
+
+    def create_quota_sale_order(self):
+        """Metodo solicitado para crear una orden de venta de cuota."""
+        return self.pay_quota()
 
 
     @api.depends("end_quota")
