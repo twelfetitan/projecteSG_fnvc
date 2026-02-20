@@ -181,12 +181,7 @@ class Swimmer(models.Model):
         string="Eventos",
         readonly=True,
     )
-    #id_display = fields.Char(
-    #    string="🆔 ID",
-    #    related='id', 
-    #    readonly=True,
-    #    store=True  # ← Lista visible
-    #)
+    
     event_count = fields.Integer(string="Número de Eventos", compute="_compute_event_count", store=False)
     has_events = fields.Boolean(compute='_compute_has_events', store=False)
     image = fields.Image()
