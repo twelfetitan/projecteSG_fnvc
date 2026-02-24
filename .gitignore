@@ -28,3 +28,5 @@ sessions/
 .coverage
 htmlcov/
 pytest_cache/
+
+pruebaExamen/

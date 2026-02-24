@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from odoo.exceptions import UserError
 import random, json
 
-
+#
 
 class Club(models.Model):
     _name = 'natacion.club'
