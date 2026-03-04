@@ -1,0 +1,51 @@
+<odoo>
+    <data>
+
+        <!-- VISTA BÚSQUEDA CON FILTROS POR Planta -->
+        <record id="view_espacio_search" model="ir.ui.view">
+            <field name="name">simagrow.espacio.search</field>
+            <field name="model">simagrow.espacio</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Espacios">
+                    <field name="planta" string="Planta" />
+                    <filter name="planta0" string="Planta 0" domain="[('planta', '=', '0')]" />
+                    <filter name="planta1" string="Planta 1" domain="[('planta', '=', '1')]" />
+                    <filter name="planta2" string="Planta 2" domain="[('planta', '=', '2')]" />
+                    <group expand="0" string="Agrupar por">
+                        <filter name="group_planta" string="Planta" context="{'group_by': 'planta'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- VISTA LISTA -->
+        <record id="view_espacio_list" model="ir.ui.view">
+            <field name="name">simagrow.espacio.list</field>
+            <field name="model">simagrow.espacio</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="ubicacion" />
+                    <field name="planta" />
+                </list>
+            </field>
+        </record>
+
+        <!-- VISTA FORMULARIO -->
+        <record id="view_espacio_form" model="ir.ui.view">
+            <field name="name">simagrow.espacio.form</field>
+            <field name="model">simagrow.espacio</field>
+            <field name="arch" type="xml">
+                <form string="espacio">
+                    <sheet>
+                        <group>
+                            <field name="ubicacion" />
+                            <field name="planta" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

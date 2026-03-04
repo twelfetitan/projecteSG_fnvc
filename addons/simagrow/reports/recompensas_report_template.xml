@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ACCIÓN DE REPORTE -->
+        <record id="action_report_recompensas" model="ir.actions.report">
+            <field name="name">Catálogo de Recompensas</field>
+            <field name="model">simagrow.recompensas</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">simagrow.report_recompensas_template</field>
+            <field name="report_file">simagrow.report_recompensas_template</field>
+            <field name="binding_model_id" ref="model_simagrow_recompensas"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- TEMPLATE QWEB -->
+        <template id="report_recompensas_template">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <t t-set="docs" t-value="request.env['simagrow.recompensas'].search([])"/>
+
+                        <!-- CABECERA -->
+                        <div style="
+                            background: linear-gradient(135deg, #1f5c2d 0%, #2d7a3a 60%, #3a9448 100%);
+                            border-radius: 12px;
+                            padding: 36px 40px;
+                            margin-bottom: 32px;
+                            text-align: center;
+                        ">
+                            <h1 style="
+                                color: #ffffff;
+                                font-size: 30px;
+                                font-weight: 800;
+                                letter-spacing: 2px;
+                                text-transform: uppercase;
+                                margin: 0 0 6px 0;
+                            ">Catálogo de Recompensas</h1>
+                            <p style="
+                                color: #1f5c2d;
+                                font-size: 13px;
+                                margin: 0;
+                                letter-spacing: 1px;
+                            ">SimaGrow — Recompensas disponibles para canjear</p>
+                        </div>
+
+                        <!-- CONTADOR TOTAL -->
+                        <div style="
+                            display: flex;
+                            justify-content: center;
+                            margin-bottom: 28px;
+                        ">
+                            <div style="
+                                background: #f1faf2;
+                                border: 2px solid #6abf5e;
+                                border-radius: 50px;
+                                padding: 10px 28px;
+                                text-align: center;
+                            ">
+                                <span style="color: #1f5c2d; font-size: 14px; font-weight: 600;">
+                                    Total de recompensas:
+                                </span>
+                                <span style="
+                                    color: #3a9448;
+                                    font-size: 18px;
+                                    font-weight: 800;
+                                    margin-left: 8px;
+                                ">
+                                    <t t-esc="len(docs)"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- TABLA DE RECOMPENSAS -->
+                        <table style="
+                            width: 100%;
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            box-shadow: 0 4px 16px rgba(31,92,45,0.12);
+                        ">
+                            <!-- CABECERA TABLA -->
+                            <thead>
+                                <tr style="
+                                    background: linear-gradient(90deg, #1f5c2d, #2d7a3a);
+                                ">
+                                    <th style="
+                                        color: #c8eac8;
+                                        font-size: 11px;
+                                        font-weight: 700;
+                                        text-transform: uppercase;
+                                        letter-spacing: 1.5px;
+                                        padding: 14px 20px;
+                                        text-align: left;
+                                        width: 40%;
+                                    ">Recompensa</th>
+                                    <th style="
+                                        color: #c8eac8;
+                                        font-size: 11px;
+                                        font-weight: 700;
+                                        text-transform: uppercase;
+                                        letter-spacing: 1.5px;
+                                        padding: 14px 20px;
+                                        text-align: center;
+                                        width: 30%;
+                                    ">Categoría</th>
+                                    <th style="
+                                        color: #c8eac8;
+                                        font-size: 11px;
+                                        font-weight: 700;
+                                        text-transform: uppercase;
+                                        letter-spacing: 1.5px;
+                                        padding: 14px 20px;
+                                        text-align: center;
+                                        width: 30%;
+                                    ">Tokens requeridos</th>
+                                </tr>
+                            </thead>
+
+                            <!-- FILAS -->
+                            <tbody>
+                                <t t-foreach="docs" t-as="rec">
+                                    <tr t-att-style="
+                                        'background: ' + ('#ffffff' if rec_index % 2 == 0 else '#f1faf2') + ';'
+                                    ">
+                                        <!-- NOMBRE -->
+                                        <td style="
+                                            padding: 14px 20px;
+                                            border-bottom: 1px solid #d4edda;
+                                            vertical-align: middle;
+                                        ">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <!-- IMAGEN (si existe) -->
+                                                <t t-if="rec.imagen">
+                                                        <img t-att-src="image_data_uri(rec.imagen)"
+                                                          style="
+                                                              width: 100px;
+                                                              height: 100px;
+                                                              object-fit: cover;
+                                                              border-radius: 8px;
+                                                              border: 2px solid #b2dfdb;
+                                                          "/>
+                                                </t>
+                                                <t t-else="">
+                                                       <div style="
+                                                        width: 100px;
+                                                        height: 100px;
+                                                        border-radius: 8px;
+                                                        background: linear-gradient(135deg, #1f5c2d, #6abf5e);
+                                                        display: flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        font-size: 32px;
+                                                    "></div>
+                                                </t>
+                                                <span style="
+                                                    font-weight: 600;
+                                                    font-size: 14px;
+                                                    color: #1f5c2d;
+                                                ">
+                                                    <t t-esc="rec.nombre or '—'"/>
+                                                </span>
+                                            </div>
+                                        </td>
+
+                                        <!-- TIPO con badge de color -->
+                                        <td style="
+                                            padding: 14px 20px;
+                                            text-align: center;
+                                            border-bottom: 1px solid #d4edda;
+                                            vertical-align: middle;
+                                        ">
+                                            <t t-if="rec.tipo == 'filamento'">
+                                                <span style="
+                                                    background: #e8f5e9;
+                                                    color: #2e7d32;
+                                                    border: 1px solid #a5d6a7;
+                                                    border-radius: 20px;
+                                                    padding: 4px 14px;
+                                                    font-size: 11px;
+                                                    font-weight: 700;
+                                                    text-transform: uppercase;
+                                                    letter-spacing: 0.8px;
+                                                ">Filamento</span>
+                                            </t>
+                                            <t t-elif="rec.tipo == 'merchandising'">
+                                                <span style="
+                                                    background: #e0f2f1;
+                                                    color: #00695c;
+                                                    border: 1px solid #80cbc4;
+                                                    border-radius: 20px;
+                                                    padding: 4px 14px;
+                                                    font-size: 11px;
+                                                    font-weight: 700;
+                                                    text-transform: uppercase;
+                                                    letter-spacing: 0.8px;
+                                                ">Merchandising</span>
+                                            </t>
+                                            <t t-elif="rec.tipo == 'snacks'">
+                                                <span style="
+                                                    background: #f9fbe7;
+                                                    color: #558b2f;
+                                                    border: 1px solid #c5e1a5;
+                                                    border-radius: 20px;
+                                                    padding: 4px 14px;
+                                                    font-size: 11px;
+                                                    font-weight: 700;
+                                                    text-transform: uppercase;
+                                                    letter-spacing: 0.8px;
+                                                ">Snacks</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #999; font-size: 12px;">—</span>
+                                            </t>
+                                        </td>
+
+                                        <!-- TOKENS -->
+                                        <td style="
+                                            padding: 14px 20px;
+                                            text-align: center;
+                                            border-bottom: 1px solid #d4edda;
+                                            vertical-align: middle;
+                                        ">
+                                            <span style="
+                                                background: #1b4d26;
+                                                color: #ffffff;
+                                                border-radius: 20px;
+                                                padding: 5px 16px;
+                                                font-size: 13px;
+                                                font-weight: 800;
+                                                display: inline-block;
+                                            ">
+                                                <t t-esc="rec.tokens or 0"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- PIE DE PÁGINA -->
+                        <div style="
+                            margin-top: 36px;
+                            text-align: center;
+                            padding: 16px;
+                            border-top: 2px solid #6abf5e;
+                        ">
+                            <p style="
+                                color: #3a9448;
+                                font-size: 11px;
+                                margin: 0;
+                                letter-spacing: 0.5px;
+                            ">
+                                Generado por SimaGrow · Documento oficial de recompensas
+                            </p>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

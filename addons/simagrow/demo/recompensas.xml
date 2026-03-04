@@ -1,0 +1,196 @@
+<odoo>
+    <data>
+
+      <!-- FILAMENTOS-->
+          <record id="simagrow.recompensas_recompensa01" model="simagrow.recompensas">
+            <field name="nombre">PLA Normal</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">30</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/pla_normal.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa02" model="simagrow.recompensas">
+            <field name="nombre">PLA Reciclado</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">40</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/pla_reciclado.jpg"/>
+          </record>
+
+         <record id="simagrow.recompensas_recompensa03" model="simagrow.recompensas">
+            <field name="nombre">PLA Madera</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">50</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/pla_madera.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa04" model="simagrow.recompensas">
+            <field name="nombre">PLA Mármol</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">60</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/pla_marmol.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa05" model="simagrow.recompensas">
+            <field name="nombre">PLA Seda</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">70</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/pla_seda.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa06" model="simagrow.recompensas">
+            <field name="nombre">PLA Eco</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">50</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/petg_eco.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa07" model="simagrow.recompensas">
+            <field name="nombre">PLA Arcoíris</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">90</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/pla_arcoiris.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa08" model="simagrow.recompensas">
+            <field name="nombre">PLA Fosforescente</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">80</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/pla_fosforescente.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa09" model="simagrow.recompensas">
+            <field name="nombre">PLA Flexible</field>
+            <field name="tipo">filamento</field>
+            <field name="tokens">75</field>
+            <field name="imagen" type="base64" file="simagrow/demo/filamentos/plu_flexible.jpg"/>
+          </record>
+
+          <!--MERCHANDISING-->
+           <record id="simagrow.recompensas_recompensa10" model="simagrow.recompensas">
+            <field name="nombre">Mochila</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">130</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/mochila.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa11" model="simagrow.recompensas">
+            <field name="nombre">Pantalon</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">110</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/pantalon.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa12" model="simagrow.recompensas">
+            <field name="nombre">Sudadera</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">140</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/sudadera.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa13" model="simagrow.recompensas">
+            <field name="nombre">Camiseta</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">80</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/camiseta.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa14" model="simagrow.recompensas">
+            <field name="nombre">Botella Aluminio</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">50</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/botellaAluminio.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa15" model="simagrow.recompensas">
+            <field name="nombre">Taza</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">40</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/taza.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa16" model="simagrow.recompensas">
+            <field name="nombre">Totebag</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">35</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/totebag.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa17" model="simagrow.recompensas">
+            <field name="nombre">Funda para el movil</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">50</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/fundaMovil.png"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa18" model="simagrow.recompensas">
+            <field name="nombre">Agenda escolar</field>
+            <field name="tipo">merchandising</field>
+            <field name="tokens">55</field>
+            <field name="imagen" type="base64" file="simagrow/demo/merchandising/agendaEscolar.png"/>
+          </record>
+
+          <!-- SNACKS-->
+           <record id="simagrow.recompensas_recompensa19" model="simagrow.recompensas">
+            <field name="nombre">Chips Ahoy</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">15</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/chipsAhoy.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa20" model="simagrow.recompensas">
+            <field name="nombre">Oreo</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">15</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/oreo.jpg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa21" model="simagrow.recompensas">
+            <field name="nombre">Agua</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">5</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/agua.jpeg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa22" model="simagrow.recompensas">
+            <field name="nombre">Coca-Cola</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">10</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/cocacola.jpeg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa23" model="simagrow.recompensas">
+            <field name="nombre">Fuze Tea</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">10</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/fuzeTea.jpeg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa24" model="simagrow.recompensas">
+            <field name="nombre">Kit Kat</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">12</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/kitkat.jpeg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa25" model="simagrow.recompensas">
+            <field name="nombre">Rosquilletas</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">8</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/rosquilletas.jpeg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa26" model="simagrow.recompensas">
+            <field name="nombre">Sandwitch</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">20</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/sandwich.jpeg"/>
+          </record>
+
+          <record id="simagrow.recompensas_recompensa27" model="simagrow.recompensas">
+            <field name="nombre">Zumo de naranja</field>
+            <field name="tipo">snacks</field>
+            <field name="tokens">10</field>
+            <field name="imagen" type="base64" file="simagrow/demo/snacks/zumoNaranja.jpeg"/>
+          </record>
+    </data>
+</odoo>

@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+
+        <!-- VISTA LISTA -->
+        <record id="view_incidencia_list" model="ir.ui.view">
+            <field name="name">simagrow.incidencia.list</field>
+            <field name="model">simagrow.incidencia</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="idIncidencia"/>
+                    <field name="descripcion"/>
+                    <field name="usuario_id"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- VISTA FORMULARIO -->
+        <record id="view_incidencia_form" model="ir.ui.view">
+            <field name="name">simagrow.incidencia.form</field>
+            <field name="model">simagrow.incidencia</field>
+            <field name="arch" type="xml">
+                <form string="Incidencia">
+                    <sheet>
+                        <group>
+                            <field name="idIncidencia" readonly="1"/>
+                            <field name="descripcion"/>
+                            <field name="usuario_id"/>
+                            <field name="fechaIncidencia"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

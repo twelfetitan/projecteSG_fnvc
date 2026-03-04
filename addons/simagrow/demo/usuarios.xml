@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="simagrow.usuario_1" model="simagrow.usuario">
+            <field name="nif">31911950W</field>
+            <field name="nombre">Modest</field>
+            <field name="apellidos">Navarro Díaz</field>
+            <field name="fecha_nacimiento">2006-01-28</field>
+            <field name="correo">modnavdia@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_2" model="simagrow.usuario">
+            <field name="nif">86937617D</field>
+            <field name="nombre">Sofía</field>
+            <field name="apellidos">Molina Ibáñez</field>
+            <field name="fecha_nacimiento">1996-06-06</field>
+            <field name="correo">sofmoliba@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_3" model="simagrow.usuario">
+            <field name="nif">66256412J</field>
+            <field name="nombre">Marina</field>
+            <field name="apellidos">Navarro Sánchez</field>
+            <field name="fecha_nacimiento">2006-05-16</field>
+            <field name="correo">marnavsan@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_4" model="simagrow.usuario">
+            <field name="nif">99554283W</field>
+            <field name="nombre">Lucía</field>
+            <field name="apellidos">Sánchez Hernández</field>
+            <field name="fecha_nacimiento">2002-12-30</field>
+            <field name="correo">lucsanher@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_5" model="simagrow.usuario">
+            <field name="nif">34016372Q</field>
+            <field name="nombre">Marcos</field>
+            <field name="apellidos">Moreno Muñoz</field>
+            <field name="fecha_nacimiento">2000-08-09</field>
+            <field name="correo">marmormun@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_6" model="simagrow.usuario">
+            <field name="nif">37113532L</field>
+            <field name="nombre">Jordi</field>
+            <field name="apellidos">Romero Romero</field>
+            <field name="fecha_nacimiento">2004-08-08</field>
+            <field name="correo">jorromrom@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_7" model="simagrow.usuario">
+            <field name="nif">56457758A</field>
+            <field name="nombre">Taras</field>
+            <field name="apellidos">Ibáñez Morales</field>
+            <field name="fecha_nacimiento">2007-06-22</field>
+            <field name="correo">taribamor@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_8" model="simagrow.usuario">
+            <field name="nif">71509654D</field>
+            <field name="nombre">Sole</field>
+            <field name="apellidos">Pérez García</field>
+            <field name="fecha_nacimiento">2007-11-02</field>
+            <field name="correo">solpergar@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_9" model="simagrow.usuario">
+            <field name="nif">78499240X</field>
+            <field name="nombre">Sofía</field>
+            <field name="apellidos">Hernández Muñoz</field>
+            <field name="fecha_nacimiento">2003-08-23</field>
+            <field name="correo">sofhermun@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_10" model="simagrow.usuario">
+            <field name="nif">43418512D</field>
+            <field name="nombre">Modest</field>
+            <field name="apellidos">Martínez López</field>
+            <field name="fecha_nacimiento">2004-11-27</field>
+            <field name="correo">modmarlop@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_11" model="simagrow.usuario">
+            <field name="nif">61975305B</field>
+            <field name="nombre">Marina</field>
+            <field name="apellidos">Morales Martínez</field>
+            <field name="fecha_nacimiento">1996-11-25</field>
+            <field name="correo">marmormar@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_12" model="simagrow.usuario">
+            <field name="nif">76476931E</field>
+            <field name="nombre">Marina</field>
+            <field name="apellidos">Molina Sánchez</field>
+            <field name="fecha_nacimiento">2004-05-07</field>
+            <field name="correo">marmolsan@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_13" model="simagrow.usuario">
+            <field name="nif">30240670V</field>
+            <field name="nombre">Alejandro</field>
+            <field name="apellidos">García Moreno</field>
+            <field name="fecha_nacimiento">1997-05-31</field>
+            <field name="correo">alegarmor@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_14" model="simagrow.usuario">
+            <field name="nif">32374032Z</field>
+            <field name="nombre">Sofía</field>
+            <field name="apellidos">Gómez López</field>
+            <field name="fecha_nacimiento">2006-11-11</field>
+            <field name="correo">sofgomlop@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_15" model="simagrow.usuario">
+            <field name="nif">90844069A</field>
+            <field name="nombre">Taras</field>
+            <field name="apellidos">Díaz Muñoz</field>
+            <field name="fecha_nacimiento">1997-03-09</field>
+            <field name="correo">tardiamun@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_16" model="simagrow.usuario">
+            <field name="nif">92448062E</field>
+            <field name="nombre">Elena</field>
+            <field name="apellidos">Martínez Hernández</field>
+            <field name="fecha_nacimiento">2001-11-24</field>
+            <field name="correo">elemarher@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_17" model="simagrow.usuario">
+            <field name="nif">33703614N</field>
+            <field name="nombre">Sole</field>
+            <field name="apellidos">Moreno López</field>
+            <field name="fecha_nacimiento">2003-12-12</field>
+            <field name="correo">solmorlop@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_18" model="simagrow.usuario">
+            <field name="nif">13318337A</field>
+            <field name="nombre">Elena</field>
+            <field name="apellidos">Romero Castillo</field>
+            <field name="fecha_nacimiento">1998-01-23</field>
+            <field name="correo">eleromcas@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_19" model="simagrow.usuario">
+            <field name="nif">14078866Z</field>
+            <field name="nombre">Marta</field>
+            <field name="apellidos">Sánchez Molina</field>
+            <field name="fecha_nacimiento">2002-05-04</field>
+            <field name="correo">marsanmol@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_20" model="simagrow.usuario">
+            <field name="nif">50637509L</field>
+            <field name="nombre">Sole</field>
+            <field name="apellidos">Fernández Díaz</field>
+            <field name="fecha_nacimiento">1999-09-12</field>
+            <field name="correo">solferdia@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_21" model="simagrow.usuario">
+            <field name="nif">70608460R</field>
+            <field name="nombre">Marina</field>
+            <field name="apellidos">Ortega Martínez</field>
+            <field name="fecha_nacimiento">2007-09-10</field>
+            <field name="correo">marortmar@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_22" model="simagrow.usuario">
+            <field name="nif">68509959C</field>
+            <field name="nombre">Renan</field>
+            <field name="apellidos">Álvarez Díaz</field>
+            <field name="fecha_nacimiento">2006-05-14</field>
+            <field name="correo">renalvdia@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_23" model="simagrow.usuario">
+            <field name="nif">81408653S</field>
+            <field name="nombre">Elena</field>
+            <field name="apellidos">Romero Molina</field>
+            <field name="fecha_nacimiento">1996-03-20</field>
+            <field name="correo">elerommol@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_24" model="simagrow.usuario">
+            <field name="nif">51912748T</field>
+            <field name="nombre">Lucía</field>
+            <field name="apellidos">Álvarez Morales</field>
+            <field name="fecha_nacimiento">1998-08-27</field>
+            <field name="correo">lucalvmor@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+        <record id="simagrow.usuario_25" model="simagrow.usuario">
+            <field name="nif">67351642Y</field>
+            <field name="nombre">Marta</field>
+            <field name="apellidos">López Ortega</field>
+            <field name="fecha_nacimiento">1999-03-10</field>
+            <field name="correo">marloport@alu.edu.gva.es</field>
+            <field name="creditos">0</field>
+        </record>
+
+    </data>
+</odoo>

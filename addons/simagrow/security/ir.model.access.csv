@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_simagrow_usuario,simagrow.usuario,model_simagrow_usuario,base.group_user,1,1,1,1
+access_simagrow_incidencia,simagrow.incidencia,model_simagrow_incidencia,base.group_user,1,1,1,1
+access_simagrow_espacio,simagrow.espacio,model_simagrow_espacio,base.group_user,1,1,1,1
+access_simagrow_recompensas,simagrow.recompensas,model_simagrow_recompensas,base.group_user,1,1,1,1
+access_simagrow_canje_recompensa_wizard,simagrow.canje_recompensa.wizard,model_simagrow_canje_recompensa_wizard,base.group_user,1,1,1,1

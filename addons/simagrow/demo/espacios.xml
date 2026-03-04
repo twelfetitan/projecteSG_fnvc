@@ -1,0 +1,83 @@
+<odoo>
+    <data>
+
+        <!-- Planta 0-->
+        <record id="simagrow.espacios_espacios01" model="simagrow.espacio">
+            <field name="ubicacion">Patio</field>
+            <field name="planta">0</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios02" model="simagrow.espacio">
+            <field name="ubicacion">Hall</field>
+            <field name="planta">0</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios03" model="simagrow.espacio">
+            <field name="ubicacion">Conserjeria</field>
+            <field name="planta">0</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios04" model="simagrow.espacio">
+            <field name="ubicacion">Secretaría</field>
+            <field name="planta">0</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios05" model="simagrow.espacio">
+            <field name="ubicacion">Sala d'actes</field>
+            <field name="planta">0</field>
+        </record>
+
+        <!-- Planta 1-->
+        <record id="simagrow.espacios_espacios06" model="simagrow.espacio">
+            <field name="ubicacion">Baño Hombres</field>
+            <field name="planta">0</field>
+        </record>
+        
+        <record id="simagrow.espacios_espacios07" model="simagrow.espacio">
+            <field name="ubicacion">1 DAM</field>
+            <field name="planta">1</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios08" model="simagrow.espacio">
+            <field name="ubicacion">1 DAW</field>
+            <field name="planta">1</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios09" model="simagrow.espacio">
+            <field name="ubicacion">1 SMX</field>
+            <field name="planta">1</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios10" model="simagrow.espacio">
+            <field name="ubicacion">1 DAM Semi</field>
+            <field name="planta">1</field>
+        </record>
+
+        <!-- Planta 2-->
+        <record id="simagrow.espacios_espacios11" model="simagrow.espacio">
+            <field name="ubicacion">Baño Mujeres</field>
+            <field name="planta">2</field>
+        </record>
+        
+        <record id="simagrow.espacios_espacios12" model="simagrow.espacio">
+            <field name="ubicacion">2 DAM</field>
+            <field name="planta">2</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios13" model="simagrow.espacio">
+            <field name="ubicacion">2 DAW</field>
+            <field name="planta">2</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios14" model="simagrow.espacio">
+            <field name="ubicacion">2 SMX</field>
+            <field name="planta">2</field>
+        </record>
+
+        <record id="simagrow.espacios_espacios15" model="simagrow.espacio">
+            <field name="ubicacion">2 DAM Semi</field>
+            <field name="planta">2</field>
+        </record>
+
+    </data>
+</odoo>

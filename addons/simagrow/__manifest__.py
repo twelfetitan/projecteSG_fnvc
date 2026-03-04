@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "proves",
+    'name': "simagrow",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -8,8 +8,8 @@
 Long description of module's purpose
     """,
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
+    'author': "Simagrow",
+    'website': "https://portal.edu.gva.es/ieslluissimarro/",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
@@ -18,21 +18,19 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'product'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/students.xml',
         'views/views.xml',
-        'views/templates.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-        'demo/swimmers.xml',
-        'demo/clubs.xml',
-        'demo/category.xml',
+        'views/usuario_views.xml',
+        'views/incidencia_views.xml',
+        'views/espacio_views.xml',
+        'reports/recompensas_report_template.xml',
+        'views/recompensas_views.xml',
+        'demo/recompensas.xml',
+        'demo/espacios.xml',
+        'demo/usuarios.xml'
     ],
 }
-

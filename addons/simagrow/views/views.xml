@@ -1,0 +1,54 @@
+<odoo>
+  <data>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="action_usuario">
+      <field name="name">Usuarios</field>
+      <field name="res_model">simagrow.usuario</field>
+      <field name="view_mode">list,form,kanban</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_incidencia">
+      <field name="name">Incidencias</field>
+      <field name="res_model">simagrow.incidencia</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_espacio_window">
+      <field name="name">Espacios</field>
+      <field name="res_model">simagrow.espacio</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_recompensas_window">
+      <field name="name">Recompensas</field>
+      <field name="res_model">simagrow.recompensas</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+
+
+
+    <!-- Top menu item (App Icon in Switcher) -->
+    <menuitem name="Simagrow" id="menu_root_simagrow" />
+
+    <!-- Top Navigation Bar Category -->
+    <menuitem name="Gestión" id="simagrow.menu_main" parent="menu_root_simagrow" />
+
+    <!-- Submenus in Dropdown -->
+    <menuitem name="Usuarios" id="simagrow.menu_usuarios" parent="simagrow.menu_main"
+      action="action_usuario" sequence="10"/>
+
+    <menuitem name="Incidencias" id="simagrow.menu_incidencia" parent="simagrow.menu_main"
+      action="action_incidencia" sequence="20"/>
+
+    <menuitem name="Espacios" id="simagrow.menu_espacio" parent="simagrow.menu_main"
+      action="action_espacio_window" sequence="30"/>
+
+    <menuitem name="Recompensas" id="simagrow.menu_recompensas" parent="simagrow.menu_main"
+      action="action_recompensas_window" sequence="40"/>
+
+
+  </data>
+</odoo>
