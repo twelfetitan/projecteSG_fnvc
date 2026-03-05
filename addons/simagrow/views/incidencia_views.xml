@@ -1,5 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+        <!-- VISTA BÚSQUEDA CON FILTROS POR RESUELTA -->
+        <record id="view_incidencia_search" model="ir.ui.view">
+            <field name="name">simagrow.incidencia.search</field>
+            <field name="model">simagrow.incidencia</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Incidencias">
+                    <field name="descripcion" string="Descripcion" />
+                    <filter name="resuelta" string="Resuelta" domain="[('resuelta', '=', True)]" />
+                    <filter name="no_resuelta" string="No Resuelta"
+                        domain="[('resuelta', '=', False)]" />
+                    <group expand="0" string="Agrupar por">
+                        <filter name="group_espacio" string="Espacio" context="{'group_by': 'espacio_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <!-- VISTA LISTA -->
         <record id="view_incidencia_list" model="ir.ui.view">
@@ -7,9 +25,9 @@
             <field name="model">simagrow.incidencia</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="idIncidencia"/>
-                    <field name="descripcion"/>
-                    <field name="usuario_id"/>
+                    <field name="idIncidencia" />
+                    <field name="titulo" />
+                    <field name="resuelta" />
                 </list>
             </field>
         </record>
@@ -22,16 +40,17 @@
                 <form string="Incidencia">
                     <sheet>
                         <group>
-                            <field name="idIncidencia" readonly="1"/>
-                            <field name="descripcion"/>
-                            <field name="usuario_id"/>
-                            <field name="fechaIncidencia"/>
+                            <field name="titulo" />
+                            <field name="descripcion" />
+                            <field name="espacio_id" />
+                            <field name="usuario_id" />
+                            <field name="fechaIncidencia" />
+                            <field name="resuelta" />
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
-
 
     </data>
 </odoo>

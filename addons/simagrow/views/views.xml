@@ -13,6 +13,7 @@
       <field name="name">Incidencias</field>
       <field name="res_model">simagrow.incidencia</field>
       <field name="view_mode">list,form</field>
+      <field name="search_view_id" ref="view_incidencia_search" />
     </record>
 
     <record model="ir.actions.act_window" id="action_espacio_window">

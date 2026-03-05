@@ -37,11 +37,6 @@ def limpiar(texto):
     reemplazos = {"á":"a","é":"e","í":"i","ó":"o","ú":"u","ñ":"n","ü":"u"}
     return "".join(reemplazos.get(c, c) for c in texto.lower())
 
-def generar_correo(nombre, apellido1, apellido2):
-    parte1 = limpiar(nombre)[:3]
-    parte2 = limpiar(apellido1)[:3]
-    parte3 = limpiar(apellido2)[:3]
-    return f"{parte1}{parte2}{parte3}@alu.edu.gva.es"
 
 # Carpeta de salida: demo/ relativa al script
 demo_folder = os.path.dirname(os.path.abspath(__file__))
@@ -68,7 +63,6 @@ with open(xml_file, "w", encoding="utf-8") as f:
         nifs_usados.add(nif)
 
         fecha_nac = generar_fecha_nacimiento().strftime("%Y-%m-%d")
-        correo = generar_correo(nombre, apellido1, apellido2)
         creditos = 0
 
         f.write(f'        <record id="simagrow.usuario_{i+1}" model="simagrow.usuario">\n')
@@ -76,7 +70,6 @@ with open(xml_file, "w", encoding="utf-8") as f:
         f.write(f'            <field name="nombre">{nombre}</field>\n')
         f.write(f'            <field name="apellidos">{apellidos}</field>\n')
         f.write(f'            <field name="fecha_nacimiento">{fecha_nac}</field>\n')
-        f.write(f'            <field name="correo">{correo}</field>\n')
         f.write(f'            <field name="creditos">{creditos}</field>\n')
         f.write(f'        </record>\n\n')
 

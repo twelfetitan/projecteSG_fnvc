@@ -26,6 +26,7 @@
             <field name="arch" type="xml">
                 <list string="Recompensas">
  
+                    <field name= "idRecompensa" />
                     <field name="nombre" string="Nombre" />
                     <field name="tipo" string="Tipo" />
                     <field name="tokens" string="Tokens" />

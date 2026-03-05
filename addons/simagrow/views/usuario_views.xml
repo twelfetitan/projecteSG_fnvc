@@ -37,18 +37,16 @@
             <field name="model">simagrow.usuario</field>
             <field name="arch" type="xml">
                 <list>
+                    <field name="idUsuario" string="ID" />
                     <field name="nombre" />
                     <field name="apellidos" />
-                    <field name="nif" string="NIF" />
-                    <field name="correo" />
-                    <field name="fecha_nacimiento" string="Fecha de Nacimiento" />
-                    <field name="num_incidencias" string="Número de Incidencias" />
+                    
                     <field name="creditos" string="Créditos" />
                 </list>
             </field>
         </record>
 
-        <!--FORMULARIO-->
+        <!--FORM-->
         <record id="view_usuario_form" model="ir.ui.view">
             <field name="name">simagrow.usuario.form</field>
             <field name="model">simagrow.usuario</field>
@@ -62,12 +60,15 @@
                     </header>
                     <sheet>
                         <group>
+                            <field name="idUsuario" string="ID Usuario" />
                             <field name="nombre" />
                             <field name="apellidos" />
                             <field name="nif" string="NIF" />
-                            <field name="correo" />
+                            <field name="correo" string="Correo" />
+                            <field name="contrasena" string="Contraseña" />
                             <field name="fecha_nacimiento" string="Fecha de Nacimiento" />
                             <field name="creditos" string="Créditos" />
+                            <field name="admin" string="Administrador" />
                         </group>
                         <notebook>
                             <page string="Incidencias">
@@ -86,9 +87,11 @@
             <field name="model">simagrow.usuario</field>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name="idUsuario" />
                     <field name="nombre" />
                     <field name="apellidos" />
                     <field name="correo" />
+                    <field name="contrasena" />
                     <field name="fecha_nacimiento" />
                     <templates>
                         <t t-name="kanban-box">
@@ -99,7 +102,7 @@
                                 <br />
                                 <t t-esc="record.apellidos.value" />
                                 <br />
-                                <t t-esc="record.correo.value" />
+                                <small>ID: <t t-esc="record.idUsuario.value" /></small>
                                 <br />
                                 <small>
                                     <t t-esc="record.fecha_nacimiento.value" />
