@@ -4,7 +4,6 @@ from datetime import date, timedelta
 from odoo.exceptions import UserError
 import random, json
 
-#
 
 class Club(models.Model):
     _name = 'natacion.club'
@@ -322,7 +321,6 @@ class Championship(models.Model):
                 rec.classification_html = '<p class="alert alert-warning mt-3">Sin resultados. Genera con "Campeonato Aleatorio".</p>'
                 continue
 
-            # Mejor tiempo por nadador (min)
             best_times = {}
             for r in results:
                 tid = r.swimmer_id.id
@@ -376,10 +374,8 @@ class Championship(models.Model):
             </div>'''.format(start_fmt, end_fmt, count, tbody)
 
     def _get_full_json(self):
-        """✅ FIXED: JSON completo del campeonato"""
         import json
         
-        # Si no hay sesiones, devuelve JSON vacío
         if not self.session_ids:
             return json.dumps({
                 "mensaje": "Sin sesiones ni resultados. Genera un campeonato aleatorio primero.",
@@ -399,7 +395,6 @@ class Championship(models.Model):
             'clasificacion': []
         }
 
-        # ✅ Sesiones → Eventos → Series → Resultados
         for session in self.session_ids.sorted('date'):
             session_data = {
                 'nombre': session.name,
@@ -417,7 +412,7 @@ class Championship(models.Model):
                         'resultados': []
                     }
                     for result in series.result_ids.sorted('rank'):
-                        if result.swimmer_id:  # ✅ Verificación
+                        if result.swimmer_id: 
                             result_data = {
                                 'nadador': result.swimmer_id.name,
                                 'club': result.swimmer_id.club_id.name or 'Sin club',
@@ -429,7 +424,6 @@ class Championship(models.Model):
                 session_data['eventos'].append(event_data)
             data['sesiones'].append(session_data)
 
-        # ✅ Clasificación FIXED - estructura plana
         results = self.env['natacion.result'].search([
             ('series_id.event_id.session_id.championship_id', '=', self.id),
             ('swimmer_id', '!=', False)
@@ -443,7 +437,7 @@ class Championship(models.Model):
                     'nadador': r.swimmer_id.name,
                     'club': r.swimmer_id.club_id.name or 'Sin club',
                     'mejor_tiempo': f"{t:.2f}s",
-                    'time': t  # ✅ Añadido para comparación numérica
+                    'time': t  
                 }
         
         data['clasificacion'] = sorted(best_times.values(), key=lambda x: x['time'])
@@ -465,7 +459,7 @@ class Championship(models.Model):
         }
 
     def action_generate_random(self):
-        """Genera campeonato completo con datos aleatorios reales"""
+       
         self.ensure_one()
         
         from datetime import datetime, timedelta
@@ -558,7 +552,7 @@ class Championship_swimmers_wizard(models.TransientModel):
         relation='natacion_championship_swimmer_wizard_rel',
         column1='wizard_id',
         column2='partner_id',
-        domain="[]",  # ← Domain dinámico abajo
+        domain="[]", 
     )
 
     swimmer_quota_valid = fields.Many2many(
@@ -575,15 +569,15 @@ class Championship_swimmers_wizard(models.TransientModel):
                 enrolled_clubs = wizard.championship_id.club_ids.ids
                 domain = [
                     ('is_swimmer', '=', True),
-                    ('club_id', 'in', enrolled_clubs),  # ← Solo clubs inscritos
-                    ('quota_valid', '=', True)  # ← Cuota OK
+                    ('club_id', 'in', enrolled_clubs), 
+                    ('quota_valid', '=', True)  
                 ]
-                return {'domain': {'swimmer_ids': domain}}  # ← SOLO FILTRA, no pobla
-            return {'domain': {'swimmer_ids': [('id', '=', False)]}}  # Vacío
+                return {'domain': {'swimmer_ids': domain}} 
+            return {'domain': {'swimmer_ids': [('id', '=', False)]}}  
 
     @api.onchange('championship_id')
     def _onchange_championship(self):
-        return self._compute_swimmer_domain()  # Trigger domain
+        return self._compute_swimmer_domain() 
 
     @api.depends('swimmer_ids')
     def _compute_quota_status(self):
@@ -806,3 +800,101 @@ class Series(models.Model):
         for series in self:
             winner_result = series.result_ids.filtered(lambda r: r.rank == 1)
             series.winner_id = winner_result[0].swimmer_id if winner_result else False
+
+
+class Championship_wizard(models.TransientModel):
+    _name = 'natacion.championship_wizard'
+    _description = 'Asistente de Creación de Campeonatos'
+
+    state = fields.Selection([
+        ('step1', 'Datos Básicos'),
+        ('step2', 'Configuración de Sesiones')
+    ], default='step1')
+
+    
+    name = fields.Char(string="Nombre del Campeonato", required=True)
+    start_date = fields.Date(string="Fecha Inicio", required=True, default=fields.Date.today)
+    end_date = fields.Date(string="Fecha Fin")
+
+    
+    num_sessions = fields.Integer(string="Número de Sesiones", default=1)
+    events_per_session = fields.Integer(string="Pruebas por Sesión", default=1)
+    series_per_event = fields.Integer(string="Series por Prueba", default=1)
+
+    @api.onchange('start_date', 'num_sessions')
+    def _onchange_start_date(self):
+        if self.start_date:
+            self.end_date = self.start_date + timedelta(days=self.num_sessions - 1 if self.num_sessions > 0 else 0)
+
+    @api.constrains('start_date', 'end_date')
+    def _check_dates(self):
+        for wizard in self:
+            if wizard.start_date and wizard.end_date and wizard.end_date < wizard.start_date:
+                raise UserError("La fecha de fin no puede ser anterior a la fecha de inicio.")
+
+    def action_next(self):
+        self.ensure_one()
+        self.state = 'step2'
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': self.env.context,
+        }
+
+    def action_previous(self):
+        self.ensure_one()
+        self.state = 'step1'
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': self.env.context,
+        }
+
+    def action_generate(self):
+        self.ensure_one()
+        
+       
+        championship = self.env['natacion.championship'].create({
+            'name': self.name,
+            'start_date': self.start_date,
+            'end_date': self.end_date or self.start_date,
+        })
+
+        for i in range(self.num_sessions):
+            session_date = self.start_date + timedelta(days=i)
+            from datetime import datetime, time
+            session_datetime = datetime.combine(session_date, time(9, 0)) # Default 9:00 AM
+            
+            session = self.env['natacion.session'].create({
+                'name': f"Sesión {i+1}",
+                'date': session_datetime,
+                'championship_id': championship.id,
+            })
+            
+            for j in range(self.events_per_session):
+                event = self.env['natacion.event'].create({
+                    'name': f"Prueba {j+1} - {session.name}",
+                    'session_id': session.id,
+                })
+                
+                for k in range(self.series_per_event):
+                    self.env['natacion.series'].create({
+                        'name': f"Serie {k+1}",
+                        'event_id': event.id,
+                    })
+
+        return {
+            'name': 'Campeonato Creado',
+            'type': 'ir.actions.act_window',
+            'res_model': 'natacion.championship',
+            'res_id': championship.id,
+            'view_mode': 'form',
+            'target': 'current',
+            'context': self.env.context,
+        }

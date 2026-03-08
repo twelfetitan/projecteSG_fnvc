@@ -2,6 +2,7 @@ services:
   odoo:
     container_name: odoo
     image: odoo:18.0
+   
     depends_on:
       - db
     ports:
@@ -15,16 +16,19 @@ services:
       - USER=odoo
       - PASSWORD=odoo
 
+
+
     #command: ["--dev=all", "-u", "modelo", "-d", "bbdd"]  
-    #command: ["--dev=all", "-u", "natacion", "-d", "fncv"]
-    #command: ["--dev=all", "-u", "pruebas", "-d", "pruebas"]
-    #command: ["--dev=all", "-u", "supermercat", "-d", "examen"]
-    command: ["--dev=all", "-u", "simagrow", "-d", "simagrow"]
+    command: ["--dev=all", "-u", "natacion", "-d", "fncv"]
+    #command: ["--dev=all", "-u", "simagrow", "-d", "simagrow"]
+    #command: ["--dev=all", "-u", "simagrow", "-d", "simagrowdb"]
+
     tty: true
 
   db:
     container_name: postgresql
     image: postgres:15
+    
     ports:
       - "5432:5432"
     environment:
@@ -37,6 +41,7 @@ services:
   jupyter:
       container_name: jupyter
       image: jupyter/base-notebook
+      
       ports:
         - "8888:8888"
       volumes:

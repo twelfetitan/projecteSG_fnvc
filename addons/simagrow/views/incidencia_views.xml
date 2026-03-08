@@ -25,7 +25,7 @@
             <field name="model">simagrow.incidencia</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="idIncidencia" />
+                    <field name= "id" />
                     <field name="titulo" />
                     <field name="resuelta" />
                 </list>

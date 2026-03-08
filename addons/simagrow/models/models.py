@@ -9,7 +9,7 @@ class Usuario(models.Model):
     _description = 'Usuario de Simagrow'
 
     
-    idUsuario = fields.Integer(string="ID Usuario", readonly=True)
+   
     nif = fields.Char(required=True)
     nombre = fields.Char(required=True)
     apellidos = fields.Char(required=True)
@@ -18,7 +18,7 @@ class Usuario(models.Model):
     contrasena = fields.Char(string="Contraseña", readonly=True)
     creditos = fields.Integer(string="Créditos")
     num_incidencias = fields.Integer(string="Número de incidencias", compute="_num_incidencias", store=True)
-    admin = fields.Boolean()
+    admin = fields.Boolean(default=False)
 
     incidencia_ids = fields.One2many('simagrow.incidencia', 'usuario_id', string="Incidencias")
 
@@ -47,9 +47,7 @@ class Usuario(models.Model):
 
     @api.model
     def create(self, vals):
-        #ID
-        max_id = self.sudo().search([], order='idUsuario desc', limit=1).idUsuario or 0
-        vals['idUsuario'] = max_id + 1
+
 
         #Contrasenña
         apellidos = vals.get('apellidos', '')
@@ -82,20 +80,16 @@ class Incidencia(models.Model):
     _name = 'simagrow.incidencia'
     _description = 'Incidencia de un usuario'
 
-    idIncidencia = fields.Integer(string="ID Incidencia", readonly=True)
     titulo = fields.Char(required=True)
     descripcion = fields.Char(required=True)
    
-    resuelta = fields.Boolean()
+    resuelta = fields.Boolean(default=False)
     fechaIncidencia = fields.Date(string="Fecha", default=fields.Date.today) #YYYY-MM-DD
 
     espacio_id = fields.Many2one('simagrow.espacio', string="Espacio", required=True)
     usuario_id = fields.Many2one('simagrow.usuario', string="Usuario", required=True)
     
-    @api.model
-    def create(self, vals):
-        vals['idIncidencia'] = self.search_count([]) + 1
-        return super(Incidencia, self).create(vals)
+    
 
    
 
@@ -103,7 +97,7 @@ class Espacio(models.Model):
     _name = 'simagrow.espacio'
     _description = 'Espacio de incidencia'
 
-    idEspacio = fields.Integer(string="ID Espacio", readonly=True)
+   
     ubicacion = fields.Char(required=True)
     planta = fields.Selection([
         ('0', 'Planta 0'),
@@ -121,11 +115,7 @@ class Espacio(models.Model):
 
     incidencia_ids = fields.One2many('simagrow.incidencia', 'espacio_id', string="Incidencias")
 
-    @api.model
-    def create(self, vals):
-        max_id = self.sudo().search([], order='idEspacio desc', limit=1).idEspacio or 0
-        vals['idEspacio'] = max_id + 1
-        return super(Espacio, self).create(vals)
+
 
 
 
@@ -133,7 +123,7 @@ class Recompensas(models.Model):
     _name = 'simagrow.recompensas'
     _description = 'Recompensas disponibles'
 
-    idRecompensa = fields.Integer(string="ID Recompensa", readonly=True)
+   
     nombre = fields.Char()
     tipo = fields.Selection([
         ('filamento', 'Filamento'),
@@ -150,11 +140,7 @@ class Recompensas(models.Model):
         for record in self:
             record.display_name = record.nombre or f"Recompensa {record.id}"
 
-    @api.model
-    def create(self, vals):
-        max_id = self.sudo().search([], order='idRecompensa desc', limit=1).idRecompensa or 0
-        vals['idRecompensa'] = max_id + 1
-        return super(Recompensas, self).create(vals)
+
 
 
 class CanjeRecompensaWizard(models.TransientModel):

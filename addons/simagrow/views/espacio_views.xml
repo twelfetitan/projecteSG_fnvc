@@ -24,7 +24,7 @@
             <field name="model">simagrow.espacio</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name= "idEspacio" />
+                    <field name= "id" />
                     <field name="ubicacion" />
                     <field name="planta" />
                 </list>

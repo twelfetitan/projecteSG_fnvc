@@ -2,7 +2,7 @@
     <data>
 
 
-        <!-- List View (sin cambios) -->
+        <!-- List View -->
         <record model="ir.ui.view" id="natacion.championship_list">
             <field name="name">natacion.championship.list</field>
             <field name="model">natacion.championship</field>
@@ -18,7 +18,6 @@
         </record>
 
 
-        <!-- Wizard Form COMPLETO (plural + limpio) -->
         <record model="ir.ui.view" id="view_natacion_championship_swimmers_wizard_form">
             <field name="name">natacion.championship.swimmers.wizard.form</field>
             <field name="model">natacion.championship.swimmers.wizard</field>
@@ -44,7 +43,6 @@
         </record>
 
 
-        <!-- Acción Wizard (plural) -->
         <record id="action_natacion_championship_swimmers_wizard" model="ir.actions.act_window">
             <field name="name">Inscripción Nadadores</field>
             <field name="res_model">natacion.championship.swimmers.wizard</field>
@@ -83,20 +81,78 @@
             <field name="target">new</field>
         </record>
 
+       
+        <record id="view_natacion_championship_wizard_form" model="ir.ui.view">
+            <field name="name">natacion.championship_wizard.form</field>
+            <field name="model">natacion.championship_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Asistente de Creación de Campeonatos">
+                    <field name="state" invisible="1"/>
+                    <sheet>
+                        <!-- Datos Básicos -->
+                        <div invisible="state != 'step1'">
+                            <h2>Paso 1: Datos del Campeonato</h2>
+                            <group>
+                                <field name="name" required="state == 'step1'"/>
+                                <field name="start_date" required="state == 'step1'"/>
+                                <field name="end_date"/>
+                            </group>
+                        </div>
 
-        <!-- Form Championship (botón incluido) -->
+                        <!-- Configuración -->
+                        <div invisible="state != 'step2'">
+                            <h2>Paso 2: Configuración de Sesiones</h2>
+                            <group>
+                                <field name="num_sessions" required="state == 'step2'"/>
+                                <field name="events_per_session" required="state == 'step2'"/>
+                                <field name="series_per_event" required="state == 'step2'"/>
+                            </group>
+                        </div>
+                    </sheet>
+                    <footer>
+                        
+                        <button name="action_next" string="Siguiente" type="object" class="btn-primary" invisible="state != 'step1'"/>
+                        
+                        <button name="action_previous" string="Anterior" type="object" class="btn-secondary" invisible="state != 'step2'"/>
+                        <button name="action_generate" string="Generar Campeonato" type="object" class="btn-primary" invisible="state != 'step2'"/>
+                        
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_natacion_championship_wizard" model="ir.actions.act_window">
+            <field name="name">Crear Campeonato Asistido</field>
+            <field name="res_model">natacion.championship_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Crear Campeonato Asistido" id="natacion.menu_championship_wizard" parent="natacion.menu_1"
+                  action="action_natacion_championship_wizard" sequence="20"/>
+
+
+
+        <!-- Form Championship  -->
         <record model="ir.ui.view" id="natacion.championship_form_view">
             <field name="name">natacion.championship.form</field>
             <field name="model">natacion.championship</field>
             <field name="arch" type="xml">
                 <form>
-                    <!-- ✅ CABECERA SUPERIOR -->
+                    <!-- CABECERA SUPERIOR -->
                     <header>
                         <button name="action_generate_random"
                             string="Generar Campeonato Aleatorio"
                             type="object"
                             class="btn-success oe_highlight"
                             invisible="session_ids" />
+
+                            <button name="%(action_natacion_championship_wizard)d"
+                            string="Nuevo Campeonato Asistido"
+                            type="action"
+                            class="btn-primary oe_highlight"
+                            invisible="id" />
 
 
                         <button name="%(natacion.action_report_championship_results)d"
@@ -110,6 +166,8 @@
                             type="action"
                             class="btn-info oe_highlight"
                             icon="fa-code" />
+
+                        
 
 
                     </header>
@@ -151,7 +209,7 @@
         </record>
 
 
-        <!-- Calendar (sin cambios) -->
+        <!-- Calendar -->
         <record id="natacion.championship_calendar" model="ir.ui.view">
             <field name="name">natacion.championship.calendar</field>
             <field name="model">natacion.championship</field>
@@ -166,7 +224,7 @@
         </record>
 
 
-        <!-- Acción principal (sin cambios) -->
+        <!-- Acción principal -->
         <record id="natacion.championship_action" model="ir.actions.act_window">
             <field name="name">Campeonatos</field>
             <field name="res_model">natacion.championship</field>

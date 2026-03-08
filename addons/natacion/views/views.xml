@@ -123,6 +123,7 @@
     <menuitem name="Championship" id="natacion.menu_championship" parent="natacion.menu_1"
               action="natacion.action_championship_window"/>
 
+
     <menuitem name="session" id="natacion.menu_session" parent="natacion.menu_1"
               action="natacion.action_session_window"/>
 

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     
-    <!-- Template principal del reporte -->
     <template id="report_championship_results">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="championship">
                 <t t-call="web.external_layout">
                     <div class="page">
                         
-                        <!-- Encabezado del campeonato -->
                         <div class="row mt-4 mb-4">
                             <div class="col-12 text-center">
                                 <h1 class="text-primary">
@@ -27,7 +25,6 @@
 
                         <hr class="mb-4"/>
 
-                        <!-- Información general -->
                         <div class="row mb-4">
                             <div class="col-6">
                                 <h4>Clubs Participantes</h4>
@@ -64,17 +61,14 @@
                             </div>
                         </div>
 
-                        <!-- Nueva página para resultados detallados -->
                         <p style="page-break-before: always;"/>
 
-                        <!-- Resultados por sesión -->
                         <div class="row">
                             <div class="col-12">
                                 <h2 class="text-center mb-4">📋 Resultados Detallados por Sesión</h2>
                                 
                                 <t t-foreach="championship.session_ids.sorted(key=lambda s: s.date)" t-as="session">
                                     
-                                    <!-- Encabezado de sesión -->
                                     <div class="mb-3 mt-4">
                                         <h3 class="bg-primary text-white p-2">
                                             <i class="fa fa-calendar"/> 
@@ -88,12 +82,11 @@
                                         </p>
                                     </div>
 
-                                    <!-- Eventos de la sesión -->
                                     <t t-foreach="session.event_ids" t-as="event">
                                         
                                         <div class="mb-4 border p-3">
                                             <h4 class="text-info">
-                                                🏊 <t t-esc="event.name"/>
+                                                 <t t-esc="event.name"/>
                                                 <t t-if="event.category_id">
                                                     <span class="badge badge-secondary">
                                                         <t t-esc="event.category_id.name"/>
@@ -101,7 +94,6 @@
                                                 </t>
                                             </h4>
 
-                                            <!-- Podio del evento -->
                                             <t t-if="event.winner_1_id or event.winner_2_id or event.winner_3_id">
                                                 <div class="row mb-3">
                                                     <div class="col-12">
@@ -146,7 +138,6 @@
                                                 </div>
                                             </t>
 
-                                            <!-- Series del evento -->
                                             <t t-foreach="event.series_ids" t-as="series">
                                                 <div class="ml-3 mb-3">
                                                     <h6 class="text-secondary">
@@ -156,7 +147,6 @@
                                                         </t>
                                                     </h6>
                                                     
-                                                    <!-- Resultados de la serie -->
                                                     <t t-if="series.result_ids">
                                                         <table class="table table-sm table-hover">
                                                             <thead class="thead-light">
@@ -204,14 +194,12 @@
 
                                     </t>
 
-                                    <!-- Salto de página entre sesiones -->
                                     <p style="page-break-after: always;" t-if="not session_last"/>
                                     
                                 </t>
                             </div>
                         </div>
 
-                        <!-- Pie de página con estadísticas finales -->
                         <div class="row mt-5">
                             <div class="col-12 text-center text-muted">
                                 <hr/>

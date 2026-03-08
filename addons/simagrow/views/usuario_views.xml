@@ -1,6 +1,22 @@
 <odoo>
     <data>
 
+        <!-- VISTA BÚSQUEDA CON FILTROS POR Planta -->
+        <record id="view_usuario_search" model="ir.ui.view">
+            <field name="name">simagrow.usuario.search</field>
+            <field name="model">simagrow.usuario</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Usuarios">
+                    <field name="name" string="Usuario" />
+                    <filter name="admin" string="Administrador" domain="[('admin', '=', True)]" />
+                    <group expand="0" string="Agrupar por">
+                        <filter name="group_nombre" string="Nombre" context="{'group_by': 'nombre'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
         <!-- WIZARD FORM -->
         <record id="view_canje_recompensa_wizard_form" model="ir.ui.view">
             <field name="name">simagrow.canje_recompensa.wizard.form</field>
@@ -9,14 +25,17 @@
                 <form string="Canjear Recompensa">
                     <sheet>
                         <group>
-                            <field name="usuario_id" readonly="1" />
+                            <field name="id" readonly="1" />
                             <field name="tokens_disponibles" />
-                            <field name="recompensa_id" domain="[('tokens', '&lt;=', tokens_disponibles)]" options="{'no_create': True, 'no_open': True}" />
+                            <field name="recompensa_id"
+                                domain="[('tokens', '&lt;=', tokens_disponibles)]"
+                                options="{'no_create': True, 'no_open': True}" />
                             <field name="tokens_requeridos" invisible="not recompensa_id" />
                         </group>
                     </sheet>
                     <footer>
-                        <button name="action_canjear" string="Canjear" type="object" class="btn-primary" />
+                        <button name="action_canjear" string="Canjear" type="object"
+                            class="btn-primary" />
                         <button string="Cancelar" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
@@ -37,10 +56,10 @@
             <field name="model">simagrow.usuario</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="idUsuario" string="ID" />
+                    <field name= "id" />
                     <field name="nombre" />
                     <field name="apellidos" />
-                    
+
                     <field name="creditos" string="Créditos" />
                 </list>
             </field>
@@ -53,14 +72,14 @@
             <field name="arch" type="xml">
                 <form string="Usuario">
                     <header>
-                        <button name="%(simagrow.action_canje_recompensa_wizard)d" 
-                                string="Canjear Recompensa" 
-                                type="action" 
-                                class="btn-primary" />
+                        <button name="%(simagrow.action_canje_recompensa_wizard)d"
+                            string="Canjear Recompensa"
+                            type="action"
+                            class="btn-primary" />
                     </header>
                     <sheet>
                         <group>
-                            <field name="idUsuario" string="ID Usuario" />
+                            <field name= "id" />
                             <field name="nombre" />
                             <field name="apellidos" />
                             <field name="nif" string="NIF" />
@@ -87,7 +106,7 @@
             <field name="model">simagrow.usuario</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="idUsuario" />
+                    <field name="id" />
                     <field name="nombre" />
                     <field name="apellidos" />
                     <field name="correo" />
@@ -102,7 +121,7 @@
                                 <br />
                                 <t t-esc="record.apellidos.value" />
                                 <br />
-                                <small>ID: <t t-esc="record.idUsuario.value" /></small>
+                                <small>ID: <t t-esc="record.id.value" /></small>
                                 <br />
                                 <small>
                                     <t t-esc="record.fecha_nacimiento.value" />
@@ -115,7 +134,6 @@
         </record>
 
     </data>
-
 
 
 </odoo>

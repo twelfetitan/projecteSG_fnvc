@@ -9,7 +9,7 @@
                 <t t-foreach="range(qty)" t-as="n">
                     <div class="page" style="height: 40mm; width: 100mm; margin: 0; padding: 2mm 4mm; font-family: 'Helvetica', 'Arial', sans-serif; background: #fff; page-break-after: always; border-bottom: 0.1mm dashed #ccc;">
                         <table style="width: 100%; border-collapse: collapse; height: 36mm;">
-                            <!-- Header Row -->
+
                             <tr>
                                 <td style="width: 35mm; vertical-align: middle; padding-bottom: 2mm; border-bottom: 1.5mm solid #0066cc;">
                                     <img t-if="company.logo" t-attf-src="data:image/*;base64,{{company.logo}}" style="max-height: 14mm; max-width: 32mm;"/>
@@ -23,7 +23,6 @@
                                     </div>
                                 </td>
                             </tr>
-                            <!-- Main Content Row -->
                             <tr>
                                 <td style="padding-top: 4mm; vertical-align: top;">
                                     <div style="font-size: 14pt; font-weight: bold; color: #0066cc;">

@@ -97,7 +97,6 @@
             </field>
         </record>
 
-        <!-- Acción con vista calendar incluida -->
         <record id="natacion.session_action" model="ir.actions.act_window">
             <field name="name">Sesiones</field>
             <field name="res_model">natacion.session</field>
